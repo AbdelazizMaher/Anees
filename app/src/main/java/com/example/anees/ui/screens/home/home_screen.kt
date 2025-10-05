@@ -32,13 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.batoulapps.adhan.Coordinates
 import com.example.anees.R
+import com.example.anees.ui.dialog.OverlayBlocker
 import com.example.anees.ui.screens.home.component.ComponentCard
 import com.example.anees.ui.screens.home.component.PrayerCardWithTimer
 import com.example.anees.ui.screens.home.component.QuranCard
 import com.example.anees.ui.screens.home.component.SubCards
-import com.example.anees.utils.location.checkPermission
-import com.example.anees.utils.location.handleLocationPermission
-import com.example.anees.utils.location.isLocationEnabled
 
 
 @Composable
@@ -56,7 +54,8 @@ fun HomeScreen(
     navToNamesOfAllah: () -> Unit = {},
     navToHisnAlMuslim: () -> Unit = {},
     navToPrayScreen: () -> Unit = {},
-    navToElMahfogat: () -> Unit = {}
+    navToElMahfogat: () -> Unit = {},
+    isSyncing: MutableState<Boolean>
 ) {
 
     val ctx = LocalContext.current
@@ -71,13 +70,8 @@ fun HomeScreen(
                     .verticalScroll(rememberScrollState())
                     .background(Color.Transparent)
             ) {
-                PrayerCardWithTimer(location) {
-                    if (ctx.checkPermission() && ctx.isLocationEnabled()) {
-                        navToPrayer()
-                    } else {
-                        ctx.handleLocationPermission(activity)
-
-                    }
+                PrayerCardWithTimer(location,isSyncing) {
+                    navToPrayer()
                 }
                 SubCards(
                     navToSebiha = navToSebiha,

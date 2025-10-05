@@ -1,6 +1,7 @@
 package com.example.anees.ui.screens.home.component
 
 import android.Manifest
+import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -41,12 +42,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.batoulapps.adhan.Coordinates
 import com.example.anees.R
 import com.example.anees.enums.AppPermission
 import com.example.anees.enums.PrayEnum
 import com.example.anees.ui.dialog.AneesAlertDialog
 import com.example.anees.utils.date_helper.DateHelper
 import com.example.anees.utils.extensions.convertNumbersToArabic
+import com.example.anees.utils.extensions.getCityAndCountryInArabic
 import com.example.anees.utils.extensions.toArabicTime
 import com.example.anees.utils.location.LocationProvider
 import com.example.anees.utils.prayer_helper.PrayerTimesHelper
@@ -61,30 +64,28 @@ fun HomeHeader(
     prayerName: String = "صلاة الظهر",
     prayerTime: String = "12:45 م".convertNumbersToArabic(),
     remainingTime: String = "5:02:02".convertNumbersToArabic(),
+    isSyncing: MutableState<Boolean>,
     onCardClick: () -> Unit = {}
 ) {
-    var showLocationPermissionDialog by remember { mutableStateOf(false) }
-    val context =LocalContext.current
+    var showLocationPermissionDialog = remember { mutableStateOf(false) }
+    val context = LocalContext.current
     val locationLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { granted ->
 
         if (granted) {
-            showLocationPermissionDialog = false
-            LocationProvider(context).fetchLatLong { location ->
-                coordinates.value = Coordinates(location.latitude, location.longitude)
-            }
+            showLocationPermissionDialog.value = false
+            syncLocation(context, coordinates, isSyncing)
         }
     }
 
-    if (showLocationPermissionDialog && !AppPermission.Location.isGranted(context)) {
+    if (showLocationPermissionDialog.value && !AppPermission.Location.isGranted(context)) {
         AneesAlertDialog(
             title = AppPermission.Location.title,
             message = AppPermission.Location.message,
             onConfirmLabel = "سماح",
             onConfirm = { locationLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION) },
-            onDismiss = { showLocationPermissionDialog = false }
-        )
+            onDismiss = { showLocationPermissionDialog.value = false })
     }
 
     Column(
@@ -92,9 +93,7 @@ fun HomeHeader(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .padding(top = 4.dp)
-    )
-    {
-
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -103,27 +102,19 @@ fun HomeHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
-                modifier = Modifier
-                    .weight(1f),
+                modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                IconButton(
-                    onClick = {
-                        showLocationPermissionDialog = true
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Sync,
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = Color(0xFF311403)
+                    SyncLocationButton(
+                        context = context,
+                        showLocationPermissionDialog = showLocationPermissionDialog,
+                        coordinates = coordinates,
+                        isSyncing = isSyncing
                     )
-                }
                 Text(
-                    text = context.getCityAndCountryInArabic(coordinates.value.latitude, coordinates.value.longitude),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.Black
+                    text = context.getCityAndCountryInArabic(
+                        coordinates.value.latitude, coordinates.value.longitude
+                    ), fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color.Black
                 )
 
             }
@@ -144,17 +135,13 @@ fun HomeHeader(
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            Color(0xFF803F0B),
-                            Color(0xFF5A2E0E),
-                            Color(0xFF311403)
+                            Color(0xFF803F0B), Color(0xFF5A2E0E), Color(0xFF311403)
                         )
                     )
                 )
                 .padding(16.dp)
                 .clickable(
-                    interactionSource = null,
-                    indication = null,
-                    onClick = onCardClick
+                    interactionSource = null, indication = null, onClick = onCardClick
                 )
         ) {
             Image(
@@ -206,8 +193,7 @@ fun HomeHeader(
                 Box(
                     modifier = Modifier
                         .background(
-                            Color.White.copy(alpha = 0.15f),
-                            shape = RoundedCornerShape(12.dp)
+                            Color.White.copy(alpha = 0.15f), shape = RoundedCornerShape(12.dp)
                         )
                         .padding(horizontal = 12.dp, vertical = 6.dp)
                         .align(Alignment.Start)
@@ -221,6 +207,46 @@ fun HomeHeader(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun SyncLocationButton(
+    modifier: Modifier = Modifier,
+    context: Context,
+    showLocationPermissionDialog: MutableState<Boolean>,
+    coordinates: MutableState<Coordinates>,
+    isSyncing: MutableState<Boolean>
+) {
+    IconButton(
+        onClick = {
+            if (!AppPermission.Location.isGranted(context)) {
+                showLocationPermissionDialog.value = true
+            } else syncLocation(
+                coordinates = coordinates,
+                context = context,
+                isSyncing = isSyncing
+            )
+        },
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = Icons.Default.Sync,
+            contentDescription = null,
+            modifier = Modifier.size(24.dp),
+            tint = Color(0xFF311403)
+        )
+    }
+}
+
+private fun syncLocation(
+    context: Context,
+    coordinates: MutableState<Coordinates>,
+    isSyncing: MutableState<Boolean>
+) {
+    isSyncing.value = true
+    LocationProvider(context).fetchLatLong { location ->
+        coordinates.value = Coordinates(location.latitude, location.longitude)
     }
 }
 
@@ -239,22 +265,19 @@ fun ExtrudedText(
             fontSize = fontSize,
             fontWeight = FontWeight.Bold,
             color = shadowColor,
-            modifier = Modifier
-                .offset(x = offsetDp, y = offsetDp)
+            modifier = Modifier.offset(x = offsetDp, y = offsetDp)
         )
         // النص الأمامي
         Text(
-            text = text,
-            fontSize = fontSize,
-            fontWeight = FontWeight.Bold,
-            color = frontColor
+            text = text, fontSize = fontSize, fontWeight = FontWeight.Bold, color = frontColor
         )
     }
 }
 
 @Composable
 fun PrayerCardWithTimer(
-    mylocation: MutableState<Coordinates>,
+    coordinates: MutableState<Coordinates>,
+    isSyncing: MutableState<Boolean>,
     onCardClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -299,10 +322,11 @@ fun PrayerCardWithTimer(
 
     HomeHeader(
         hijriDate = DateHelper.getTodayHijriDate(),
-        coordinates = mylocation ,
+        coordinates = coordinates,
         prayerName = if (PrayerTimesHelper.isTodayFriday() && prayEnum == PrayEnum.ZUHR) "صلاة الجمعة" else prayEnum.value,
         prayerTime = targetTime.toArabicTime().convertNumbersToArabic(),
-        remainingTime = remainingTime.convertNumbersToArabic()
+        remainingTime = remainingTime.convertNumbersToArabic(),
+        isSyncing = isSyncing
     ) {
         onCardClick()
     }

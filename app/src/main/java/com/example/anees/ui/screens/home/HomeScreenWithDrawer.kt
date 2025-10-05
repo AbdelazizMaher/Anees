@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.batoulapps.adhan.Coordinates
 import com.example.anees.R
+import com.example.anees.ui.dialog.OverlayBlocker
 import com.example.anees.ui.navigation.ScreenRoute
 import com.example.anees.ui.screens.home.component.HomeDrawer
 import com.example.anees.ui.screens.radio.components.ScreenBackground
@@ -75,6 +76,7 @@ fun HomeScreenWithDrawer(
     navToHisnAlMuslim: () -> Unit = {},
     navToPrayScreen: () -> Unit,
     navToElMahfogat: () -> Unit,
+    isSyncing: MutableState<Boolean>,
 ) {
     val drawerState = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -161,13 +163,12 @@ fun HomeScreenWithDrawer(
                 }
                 .clip(RoundedCornerShape(roundness))
         ) {
-
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color(0xFFC9C0B3))
-
             ) {
+
                 Image(
                     painter = painterResource(R.drawable.homeback),
                     contentDescription = null,
@@ -189,60 +190,46 @@ fun HomeScreenWithDrawer(
                                     modifier = Modifier.fillMaxWidth(),
                                     fontFamily = FontFamily(Font(R.font.othmani)),
 
-                                        textAlign = TextAlign.End
+                                    textAlign = TextAlign.End
+                                )
+                            },
+                            actions = {
+                                IconButton(onClick = {
+                                    drawerState.value = !drawerState.value
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Menu,
+                                        contentDescription = "القائمة"
                                     )
-                                },
-                                actions = {
-                                    IconButton(onClick = {
-                                        drawerState.value = !drawerState.value
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Default.Menu,
-                                            contentDescription = "القائمة"
-                                        )
-                                    }
-                                },
-                                navigationIcon = {}
-                            )
-                        }
-                        HomeScreen(
-                            location = location,
-                            navToSebiha = navToSebiha,
-                            navToQibla = navToQibla,
-                            navToQuran = navToQuran,
-                            navToAzkar = navToAzkar,
-                            navToHadith = navToHadith,
-                            navToRadio = navToRadio,
-                            navToTafsir = navToTafsir,
-                            navToPrayer = navToPrayer,
-                            navToReciters = navToReciters,
-                            navToNamesOfAllah = navToNamesOfAllah,
-                            navToHisnAlMuslim = navToHisnAlMuslim,
-                            navToPrayScreen = navToPrayScreen,
-                            navToElMahfogat = navToElMahfogat,
+                                }
+                            },
+                            navigationIcon = {}
                         )
                     }
+                    HomeScreen(
+                        isSyncing = isSyncing,
+                        location = location,
+                        navToSebiha = navToSebiha,
+                        navToQibla = navToQibla,
+                        navToQuran = navToQuran,
+                        navToAzkar = navToAzkar,
+                        navToHadith = navToHadith,
+                        navToRadio = navToRadio,
+                        navToTafsir = navToTafsir,
+                        navToPrayer = navToPrayer,
+                        navToReciters = navToReciters,
+                        navToNamesOfAllah = navToNamesOfAllah,
+                        navToHisnAlMuslim = navToHisnAlMuslim,
+                        navToPrayScreen = navToPrayScreen,
+                        navToElMahfogat = navToElMahfogat,
+                    )
                 }
 
+                if (isSyncing.value) OverlayBlocker()
+            }
         }
 
     }
-
-//    val ctx = LocalContext.current
-//    val lifecycleOwner = LocalLifecycleOwner.current
-//    DisposableEffect(lifecycleOwner) {
-//        val observer = LifecycleEventObserver { _, event ->
-//            if (event == Lifecycle.Event.ON_RESUME) {
-//                Log.i("TAG,", "ON_RESUME: ")
-//                viewModel.refreshPermission(ctx.hasOverlayPermission())
-//            }
-//        }
-//        lifecycleOwner.lifecycle.addObserver(observer)
-//
-//        onDispose {
-//            lifecycleOwner.lifecycle.removeObserver(observer)
-//        }
-//    }
 }
 
 

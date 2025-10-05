@@ -5,6 +5,7 @@ import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.batoulapps.adhan.Coordinates
 import com.example.anees.data.local.sharedpreference.SharedPreferencesImpl
 import com.example.anees.data.model.RecitationModel
 import com.example.anees.enums.AuthorEdition
@@ -52,11 +53,11 @@ import com.google.gson.Gson
 fun SetUpNavHost(
     navController: NavHostController,
     location: MutableState<Coordinates>,
-    readyToShowPermissions: MutableState<Boolean>
+    readyToShowPermissions: MutableState<Boolean>,
+    isSyncing: MutableState<Boolean>
 ) {
     NavHost(
-        navController = navController,
-        startDestination = ScreenRoute.SplashScreen
+        navController = navController, startDestination = ScreenRoute.SplashScreen
     ) {
         composable<ScreenRoute.SplashScreen> {
             SplashScreen(navToHome = {
@@ -68,6 +69,7 @@ fun SetUpNavHost(
 
         composable<ScreenRoute.HomeScreen> {
             HomeScreenWithDrawer(
+                isSyncing = isSyncing,
                 location = location,
                 navToSebiha = {
                     navController.navigate(ScreenRoute.Sebiha)
@@ -84,14 +86,14 @@ fun SetUpNavHost(
                 navToHadith = {
                     navController.navigate(ScreenRoute.HadithAuthorsScreen)
                 },
-                navToPrayer = {
-                    navController.navigate(ScreenRoute.PrayerTimesScreen)
-                },
                 navToRadio = {
                     navController.navigate(ScreenRoute.RadioScreen)
                 },
                 navToTafsir = {
                     navController.navigate(ScreenRoute.TafsirScreen)
+                },
+                navToPrayer = {
+                    navController.navigate(ScreenRoute.PrayerTimesScreen)
                 },
                 navToReciters = {
                     navController.navigate(ScreenRoute.RecitersScreen)
@@ -99,18 +101,18 @@ fun SetUpNavHost(
                 navToNamesOfAllah = {
                     navController.navigate(ScreenRoute.NamesOfAllahScreen)
                 },
-                navToHisnAlMuslim = {
-                    navController.navigate(ScreenRoute.HisnAlMuslimScreen)
-                },
                 navToSettings = {
                     navController.navigate(ScreenRoute.SettingsScreen)
+                },
+                navToHisnAlMuslim = {
+                    navController.navigate(ScreenRoute.HisnAlMuslimScreen)
                 },
                 navToPrayScreen = {
                     navController.navigate(ScreenRoute.PrayScreen)
                 },
                 navToElMahfogat = {
                     navController.navigate(ScreenRoute.ElMahfogatScreen)
-                }
+                },
             )
         }
         composable<ScreenRoute.Sebiha> {
@@ -120,23 +122,19 @@ fun SetUpNavHost(
             }
         }
         composable<ScreenRoute.DownloadQuranScreen> {
-            DownloadedAudioScreen(
-                onBackClick = {
-                    navController.popBackStack()
-                    navController.navigate(ScreenRoute.HomeScreen)
-                },
-                onSuraClicked = {
-                    navController.navigate(ScreenRoute.QuranPlayerScreen(
-                        recitationModel = null,
-                        recitationName = null,
-                        index = it,
-                        isOnline = false
-                    ))
-                }
-            )
+            DownloadedAudioScreen(onBackClick = {
+                navController.popBackStack()
+                navController.navigate(ScreenRoute.HomeScreen)
+            }, onSuraClicked = {
+                navController.navigate(
+                    ScreenRoute.QuranPlayerScreen(
+                        recitationModel = null, recitationName = null, index = it, isOnline = false
+                    )
+                )
+            })
         }
         composable<ScreenRoute.QiblaScreen> {
-            QiblaScreen{
+            QiblaScreen {
                 navController.popBackStack()
             }
         }
@@ -144,30 +142,22 @@ fun SetUpNavHost(
         composable<ScreenRoute.CompleteQuranScreen> {
             val sharedPref = SharedPreferencesImpl(navController.context)
             val initPage = sharedPref.fetchData(Constants.CURRENT_PAGE_INDEX, 658)
-            QuranPDFViewerScreen(
-                initPage = initPage,
-                onIndexButtonClick = {
-                    navController.navigate(ScreenRoute.QuranIndexScreen)
-                },
-                onKhatmButtonClick = {
-                    navController.navigate(ScreenRoute.KhatmQuranDuaScreen)
-                },
-                onJuzButtonClick = {
-                    navController.navigate(ScreenRoute.JuzIndexScreen)
-                }
-            )
+            QuranPDFViewerScreen(initPage = initPage, onIndexButtonClick = {
+                navController.navigate(ScreenRoute.QuranIndexScreen)
+            }, onKhatmButtonClick = {
+                navController.navigate(ScreenRoute.KhatmQuranDuaScreen)
+            }, onJuzButtonClick = {
+                navController.navigate(ScreenRoute.JuzIndexScreen)
+            })
         }
 
         composable<ScreenRoute.AdhkarScreen> {
-            AdhkarScreen(
-                navToHome = {
-                    navController.navigateUp()
-                },
-                navToDetails = { cat ->
-                    //  navController.navigateUp()
-                    navController.navigate(AzkarDetailsScreen(cat))
-                }
-            )
+            AdhkarScreen(navToHome = {
+                navController.navigateUp()
+            }, navToDetails = { cat ->
+                //  navController.navigateUp()
+                navController.navigate(AzkarDetailsScreen(cat))
+            })
         }
         composable<AzkarDetailsScreen> {
             val asd = it.arguments?.getString("category") ?: ""
@@ -178,8 +168,7 @@ fun SetUpNavHost(
         }
         composable<ScreenRoute.HadithScreen> {
             val author = Gson().fromJson(
-                it.arguments?.getString("author"),
-                AuthorEdition::class.java
+                it.arguments?.getString("author"), AuthorEdition::class.java
             )
             val id = it.arguments?.getString("number") ?: ""
             HadithScreen(author, id, {
@@ -187,27 +176,21 @@ fun SetUpNavHost(
             })
         }
         composable<ScreenRoute.HadithAuthorsScreen> {
-            HadithAuthorsScreen(
-                onBackClick = {
-                    navController.navigateUp()
-                }, navToHadithsSections = {
-                    navController.navigate(ScreenRoute.HadithSectionsScreen(it))
-                }
-            )
+            HadithAuthorsScreen(onBackClick = {
+                navController.navigateUp()
+            }, navToHadithsSections = {
+                navController.navigate(ScreenRoute.HadithSectionsScreen(it))
+            })
         }
         composable<ScreenRoute.HadithSectionsScreen> {
             val author = Gson().fromJson(
-                it.arguments?.getString("author"),
-                AuthorEdition::class.java
+                it.arguments?.getString("author"), AuthorEdition::class.java
             )
-            HadithSectionsScreen(
-                author, { auth, id ->
-                    navController.navigate(ScreenRoute.HadithScreen(auth, id))
-                },
-                onBackClick = {
-                    navController.navigateUp()
-                }
-            )
+            HadithSectionsScreen(author, { auth, id ->
+                navController.navigate(ScreenRoute.HadithScreen(auth, id))
+            }, onBackClick = {
+                navController.navigateUp()
+            })
         }
         composable<ScreenRoute.QuranIndexScreen> {
             QuranIndexScreen() {
@@ -237,48 +220,42 @@ fun SetUpNavHost(
         }
         composable<ScreenRoute.PrayerTimesScreen> {
             PrayerScreen(
-                location = location,
-                onPreviewClick = {
+                isSyncing = isSyncing,
+                location = location, onPreviewClick = {
                     navController.navigate(AzanPlayerScreen)
-                }
-            ) {
-                navController.navigateUp()
-            }
+                },
+                onBackClick = {navController.navigateUp()}
+            )
+
         }
 
         composable<ScreenRoute.ElMahfogatScreen> {
-            ElMahfogatScreen(
-                navToHome = {
-                    navController.navigateUp()
-                },
-                navToAzkarDetails = { azkarCategoty ->
-                    navController.navigate(AzkarDetailsScreen(azkarCategoty))
-                },
-                navToReciter = {
-                    navController.navigate(ScreenRoute.QuranPlayerScreen(
-                        recitationModel = null,
-                        recitationName = null,
-                        index = it,
-                        isOnline = false
-                    ))
-                }
-            )
+            ElMahfogatScreen(navToHome = {
+                navController.navigateUp()
+            }, navToAzkarDetails = { azkarCategoty ->
+                navController.navigate(AzkarDetailsScreen(azkarCategoty))
+            }, navToReciter = {
+                navController.navigate(
+                    ScreenRoute.QuranPlayerScreen(
+                        recitationModel = null, recitationName = null, index = it, isOnline = false
+                    )
+                )
+            })
         }
 
         composable<ScreenRoute.RadioScreen> {
-            RadioScreen{
+            RadioScreen {
                 navController.navigateUp()
             }
         }
 
         composable<ScreenRoute.TafsirScreen> {
-            TafsirScreen (navToDetails = {
+            TafsirScreen(navToDetails = {
                 navController.navigateUp()
                 navController.navigate(ScreenRoute.TafsirDetailsScreen(it))
-            },navToHome = {
+            }, navToHome = {
                 navController.navigateUp()
-            }
-            )
+            })
         }
 
         composable<ScreenRoute.NamesOfAllahScreen> {
@@ -289,10 +266,9 @@ fun SetUpNavHost(
 
         composable<ScreenRoute.TafsirDetailsScreen> {
             val surah = Gson().fromJson(
-                it.arguments?.getString("surah"),
-                QuranSurah::class.java
+                it.arguments?.getString("surah"), QuranSurah::class.java
             )
-            TafsirDetailsScreen(surah){
+            TafsirDetailsScreen(surah) {
                 navController.navigateUp()
                 navController.navigate(ScreenRoute.TafsirScreen)
             }
@@ -300,30 +276,36 @@ fun SetUpNavHost(
         composable<ScreenRoute.RecitersScreen> {
             RecitersScreen(onBackClick = {
                 navController.navigateUp()
-            }) { recitationModel , recitationName ->
-                navController.navigate(ScreenRoute.SuraMp3Screen(Gson().toJson(recitationModel) , recitationName))
+            }) { recitationModel, recitationName ->
+                navController.navigate(
+                    ScreenRoute.SuraMp3Screen(
+                        Gson().toJson(recitationModel), recitationName
+                    )
+                )
             }
         }
 
         composable<ScreenRoute.SuraMp3Screen> {
             val recitationModel = Gson().fromJson(
-                it.arguments?.getString("recitationModel"),
-                RecitationModel::class.java
+                it.arguments?.getString("recitationModel"), RecitationModel::class.java
             )
 
             val recitationName = it.arguments?.getString("recitationName") ?: ""
 
-            SuraMp3Screen(recitationModel , recitationName, onBackClick = {
+            SuraMp3Screen(recitationModel, recitationName, onBackClick = {
                 navController.navigateUp()
-            }) { recitationModel , recitationName, index ->
-                navController.navigate(ScreenRoute.QuranPlayerScreen(recitationModel , recitationName, index))
+            }) { recitationModel, recitationName, index ->
+                navController.navigate(
+                    ScreenRoute.QuranPlayerScreen(
+                        recitationModel, recitationName, index
+                    )
+                )
             }
         }
 
         composable<ScreenRoute.QuranPlayerScreen> {
             val recitationModel = Gson().fromJson(
-                it.arguments?.getString("recitationModel"),
-                RecitationModel::class.java
+                it.arguments?.getString("recitationModel"), RecitationModel::class.java
             )
             val isOnline = it.arguments?.getBoolean("isOnline") ?: true
             val recitationName = it.arguments?.getString("recitationName") ?: ""
@@ -346,35 +328,35 @@ fun SetUpNavHost(
         }
 
         composable<AzanPlayerScreen> {
-            val (prayEnum , time) = PrayerTimesHelper.getNextPrayer() ?: (PrayEnum.FAJR to 0L)
+            val (prayEnum, time) = PrayerTimesHelper.getNextPrayer() ?: (PrayEnum.FAJR to 0L)
             AzanScreen(
                 prayEnum = prayEnum,
                 prayerTime = time.toArabicTime().convertNumbersToArabic(),
-            ){
+            ) {
                 navController.navigateUp()
             }
         }
 
         composable<AzanSettingsPlayerScreen> {
-            var (prayEnum , time) = PrayerTimesHelper.getNextPrayer() ?: (PrayEnum.ZUHR to 0L)
-            if (prayEnum == PrayEnum.FAJR){
-                prayEnum =  PrayerTimesHelper.getAllPrayers()[1].first
+            var (prayEnum, time) = PrayerTimesHelper.getNextPrayer() ?: (PrayEnum.ZUHR to 0L)
+            if (prayEnum == PrayEnum.FAJR) {
+                prayEnum = PrayerTimesHelper.getAllPrayers()[1].first
                 time = PrayerTimesHelper.getAllPrayers()[1].second
             }
             AzanScreen(
                 prayEnum = prayEnum,
                 prayerTime = time.toArabicTime().convertNumbersToArabic(),
-            ){
+            ) {
                 navController.navigateUp()
             }
         }
 
         composable<FajrPlayerScreen> {
-            val (prayEnum , time) =  PrayerTimesHelper.getAllPrayers()[0]
+            val (prayEnum, time) = PrayerTimesHelper.getAllPrayers()[0]
             AzanScreen(
                 prayEnum = prayEnum,
                 prayerTime = time.toArabicTime().convertNumbersToArabic(),
-            ){
+            ) {
                 navController.navigateUp()
             }
         }
@@ -382,14 +364,11 @@ fun SetUpNavHost(
         composable<ScreenRoute.SettingsScreen> {
             SettingsScreen(onBackClick = {
                 navController.navigateUp()
-            },
-                onAzanViewClick = {
-                    navController.navigate(AzanSettingsPlayerScreen)
-                },
-                onFajarClick = {
-                    navController.navigate(FajrPlayerScreen)
-                }
-            )
+            }, onAzanViewClick = {
+                navController.navigate(AzanSettingsPlayerScreen)
+            }, onFajarClick = {
+                navController.navigate(FajrPlayerScreen)
+            })
         }
     }
 }
