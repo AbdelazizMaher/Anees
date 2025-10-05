@@ -1,5 +1,7 @@
 package com.example.anees.ui.screens.home
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateFloat
@@ -23,10 +25,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -34,6 +38,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -43,7 +48,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.batoulapps.adhan.Coordinates
 import com.example.anees.R
+import com.example.anees.ui.dialog.OverlayBlocker
 import com.example.anees.ui.navigation.ScreenRoute
 import com.example.anees.ui.screens.home.component.HomeDrawer
 import com.example.anees.ui.screens.radio.components.ScreenBackground
@@ -52,7 +60,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenWithDrawer(
-    location: String? = "",
+    location: MutableState<Coordinates>,
     navToSebiha: () -> Unit = {},
     navToQibla: () -> Unit = {},
     navToQuran: () -> Unit = {},
@@ -64,17 +72,28 @@ fun HomeScreenWithDrawer(
     navToReciters: () -> Unit = {},
     navToNamesOfAllah: () -> Unit = {},
     navToSettings: () -> Unit = {},
+    viewModel: HomeViewModel = viewModel(),
     navToHisnAlMuslim: () -> Unit = {},
     navToPrayScreen: () -> Unit,
     navToElMahfogat: () -> Unit,
+    isSyncing: MutableState<Boolean>,
 ) {
     val drawerState = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    var showDialog by remember { mutableStateOf(true) }
+    val notificationLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { _ ->
+        showDialog = false
+    }
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color(0xFFC9C0B3))
-    ) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFC9C0B3))
+    )
+    {
         ScreenBackground()
         HomeDrawer(
             isOpen = drawerState.value,
@@ -82,7 +101,7 @@ fun HomeScreenWithDrawer(
                 scope.launch {
                     drawerState.value = false
                     when (destination) {
-                        ScreenRoute.HomeScreen -> { }
+                        ScreenRoute.HomeScreen -> {}
                         ScreenRoute.QiblaScreen -> navToQibla()
                         ScreenRoute.AdhkarScreen -> navToAzkar()
                         ScreenRoute.NamesOfAllahScreen -> navToNamesOfAllah()
@@ -95,7 +114,7 @@ fun HomeScreenWithDrawer(
                         ScreenRoute.PrayerTimesScreen -> navToPrayer()
                         ScreenRoute.HisnAlMuslimScreen -> navToHisnAlMuslim()
                         ScreenRoute.SettingsScreen -> navToSettings()
-                        else -> {  }
+                        else -> {}
                     }
                 }
             }
@@ -134,81 +153,81 @@ fun HomeScreenWithDrawer(
             }
         }
 
-
-            Column(
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                    translationX = offset.x
+                }
+                .clip(RoundedCornerShape(roundness))
+        ) {
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .graphicsLayer {
-                        scaleX = scale
-                        scaleY = scale
-                        translationX = offset.x
-                    }
-                    .clip(RoundedCornerShape(roundness))
+                    .background(Color(0xFFC9C0B3))
             ) {
 
-                Box (
+                Image(
+                    painter = painterResource(R.drawable.homeback),
+                    contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color(0xFFC9C0B3))
+                        .alpha(0.22f),
+                    contentScale = ContentScale.Crop
+                )
+                Column {
+                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
 
-                ){
-                    Image(
-                        painter = painterResource(R.drawable.homeback),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .alpha(0.22f),
-                        contentScale =ContentScale.Crop
-                    )
-                    Column {
-                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                        TopAppBar(
+                            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+                            title = {
+                                Text(
+                                    text = "أنيس المسلم",
+                                    fontSize = 22.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    fontFamily = FontFamily(Font(R.font.othmani)),
 
-                            TopAppBar(
-                                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
-                                title = {
-                                    Text(
-                                        text = "أنيس المسلم",
-                                        fontSize = 22.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.fillMaxWidth(),
-                                        fontFamily = FontFamily(Font(R.font.othmani)),
-
-                                        textAlign = TextAlign.End
+                                    textAlign = TextAlign.End
+                                )
+                            },
+                            actions = {
+                                IconButton(onClick = {
+                                    drawerState.value = !drawerState.value
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Menu,
+                                        contentDescription = "القائمة"
                                     )
-                                },
-                                actions = {
-                                    IconButton(onClick = {
-                                        drawerState.value = !drawerState.value
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Default.Menu,
-                                            contentDescription = "القائمة"
-                                        )
-                                    }
-                                },
-                                navigationIcon = {}
-                            )
-                        }
-                        HomeScreen(
-                            location = location,
-                            navToSebiha = navToSebiha,
-                            navToQibla = navToQibla,
-                            navToQuran = navToQuran,
-                            navToAzkar = navToAzkar,
-                            navToHadith = navToHadith,
-                            navToRadio = navToRadio,
-                            navToTafsir = navToTafsir,
-                            navToPrayer = navToPrayer,
-                            navToReciters = navToReciters,
-                            navToNamesOfAllah = navToNamesOfAllah,
-                            navToHisnAlMuslim = navToHisnAlMuslim,
-                            navToPrayScreen = navToPrayScreen,
-                            navToElMahfogat = navToElMahfogat,
+                                }
+                            },
+                            navigationIcon = {}
                         )
                     }
+                    HomeScreen(
+                        isSyncing = isSyncing,
+                        location = location,
+                        navToSebiha = navToSebiha,
+                        navToQibla = navToQibla,
+                        navToQuran = navToQuran,
+                        navToAzkar = navToAzkar,
+                        navToHadith = navToHadith,
+                        navToRadio = navToRadio,
+                        navToTafsir = navToTafsir,
+                        navToPrayer = navToPrayer,
+                        navToReciters = navToReciters,
+                        navToNamesOfAllah = navToNamesOfAllah,
+                        navToHisnAlMuslim = navToHisnAlMuslim,
+                        navToPrayScreen = navToPrayScreen,
+                        navToElMahfogat = navToElMahfogat,
+                    )
                 }
 
+                if (isSyncing.value) OverlayBlocker()
             }
+        }
 
     }
 }

@@ -16,28 +16,53 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.batoulapps.adhan.Coordinates
+import com.example.anees.ui.screens.home.component.SyncLocationButton
+import com.example.anees.utils.extensions.getCityAndCountryInArabic
 
 @Composable
 fun PrayerTopBar(
-    location: String,
-    onBackClick: () -> Unit = {}
-){
+    coordinates: MutableState<Coordinates>,
+    onBackClick: () -> Unit = {},
+    isSyncing: MutableState<Boolean>
+) {
+    val context = LocalContext.current
+    val showLocationPermissionDialog = remember { mutableStateOf(false) }
+
     Row(
-        Modifier.fillMaxWidth().padding(top = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp),
+        horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
-    ){
-        LocationChip(location = location, icon = Icons.Default.LocationOn)
+    ) {
+        LocationChip(
+            location = context.getCityAndCountryInArabic(
+                coordinates.value.latitude, coordinates.value.longitude
+            ), icon = Icons.Default.LocationOn
+        )
+        SyncLocationButton(
+            context = context,
+            showLocationPermissionDialog = showLocationPermissionDialog,
+            coordinates = coordinates,
+            isSyncing = isSyncing
+        )
+        Spacer(modifier = Modifier.weight(1f))
+
         IconButton(
             onClick = onBackClick,
             modifier = Modifier.size(48.dp),
-        ){
+        ) {
             Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Back")
         }
 
@@ -51,7 +76,6 @@ fun LocationChip(
     modifier: Modifier = Modifier
 ) {
     Row(
-
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .background(Color(0xFFE0E0E0), shape = RoundedCornerShape(50.dp))

@@ -27,6 +27,7 @@ import com.example.anees.workers.AlarmResetWorker
 import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import androidx.core.net.toUri
 
 fun Context.isInternetAvailable(): Boolean {
     val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -69,7 +70,12 @@ fun Context.setAlarm(
     triggerTimeMillis: Long,
     prayEnum: PrayEnum
 ) {
-    Log.e("TAG1", "setAlarm:$requestCode : ${prayEnum.value} -> ${triggerTimeMillis.toArabicTime().convertNumbersToArabic()}", )
+    Log.e(
+        "TAG1",
+        "setAlarm:$requestCode : ${prayEnum.value} -> ${
+            triggerTimeMillis.toArabicTime().convertNumbersToArabic()
+        }"
+    )
     val intent = Intent(this, AzanAlarmReceiver::class.java)
     intent.putExtra("prayEnum", prayEnum)
     intent.putExtra("time", triggerTimeMillis)
@@ -117,22 +123,8 @@ fun Context.isVolumeZero(): Boolean {
     return volume == 0
 }
 
-fun Context.requestOverlayPermission() {
-    if (!Settings.canDrawOverlays(this)) {
-        try {
-            val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:$packageName")
-            )
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-        } catch (e: Exception) {
-            val fallbackIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            fallbackIntent.data = Uri.parse("package:$packageName")
-            fallbackIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(fallbackIntent)
-        }
-    }
+fun Context.hasOverlayPermission(): Boolean {
+    return Settings.canDrawOverlays(this)
 }
 
 fun Context.scheduleMidnightAlarmReset() {
@@ -183,19 +175,30 @@ fun Context.getCityAndCountryInArabic(lat: Double, lon: Double): String {
     }
 }
 
-fun Context.requestNotificationPermission(activity: Activity, requestCode: Int = 1001) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                activity,
-                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
-                requestCode
-            )
-        }
+fun Context.openOverlaySettings() {
+    try {
+        val intent = Intent(
+            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+            "package:${this.packageName}".toUri()
+        )
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        this.startActivity(intent)
+    } catch (e: Exception) {
+        val fallbackIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        fallbackIntent.data = "package:$this.packageName".toUri()
+        fallbackIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        this.startActivity(fallbackIntent)
+    }
+}
+
+fun Context.openAlarmSettings(onSkip: () -> Unit = {}) {
+    Log.i("TAG", "openAlarmSettings called")
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        this.startActivity(intent)
+    } else {
+        onSkip()
     }
 }
 
