@@ -1,5 +1,8 @@
 package com.example.anees.ui.screens.home.component
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,10 +15,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,36 +37,57 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.batoulapps.adhan.Coordinates
 import com.example.anees.R
-import com.example.anees.data.local.sharedpreference.SharedPreferencesImpl
+import com.example.anees.enums.AppPermission
 import com.example.anees.enums.PrayEnum
+import com.example.anees.ui.dialog.AneesAlertDialog
 import com.example.anees.utils.date_helper.DateHelper
 import com.example.anees.utils.extensions.convertNumbersToArabic
 import com.example.anees.utils.extensions.getCityAndCountryInArabic
 import com.example.anees.utils.extensions.toArabicTime
+import com.example.anees.utils.location.LocationProvider
 import com.example.anees.utils.prayer_helper.PrayerTimesHelper
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
 
-@Preview
 @Composable
 fun HomeHeader(
     hijriDate: String = "24 رمضان 1445 هـ".convertNumbersToArabic(),
-    location: String? = "القاهرة، مصر",
+    coordinates: MutableState<Coordinates>,
     prayerName: String = "صلاة الظهر",
     prayerTime: String = "12:45 م".convertNumbersToArabic(),
     remainingTime: String = "5:02:02".convertNumbersToArabic(),
     onCardClick: () -> Unit = {}
 ) {
+    var showLocationPermissionDialog by remember { mutableStateOf(false) }
+    val context =LocalContext.current
+    val locationLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+
+        if (granted) {
+            showLocationPermissionDialog = false
+            LocationProvider(context).fetchLatLong { location ->
+                coordinates.value = Coordinates(location.latitude, location.longitude)
+            }
+        }
+    }
+
+    if (showLocationPermissionDialog && !AppPermission.Location.isGranted(context)) {
+        AneesAlertDialog(
+            title = AppPermission.Location.title,
+            message = AppPermission.Location.message,
+            onConfirmLabel = "سماح",
+            onConfirm = { locationLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION) },
+            onDismiss = { showLocationPermissionDialog = false }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -71,14 +101,34 @@ fun HomeHeader(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = location?:"",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color.Black
-            )
+            Row(
+                modifier = Modifier
+                    .weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                IconButton(
+                    onClick = {
+                        showLocationPermissionDialog = true
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Sync,
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = Color(0xFF311403)
+                    )
+                }
+                Text(
+                    text = context.getCityAndCountryInArabic(coordinates.value.latitude, coordinates.value.longitude),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black
+                )
+
+            }
             Text(
                 text = hijriDate,
                 fontSize = 14.sp,
@@ -87,7 +137,7 @@ fun HomeHeader(
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         Box(
             modifier = Modifier
@@ -176,7 +226,6 @@ fun HomeHeader(
     }
 }
 
-@Preview
 @Composable
 fun ExtrudedText(
     text: String = "صلاة الظهر",
@@ -207,7 +256,7 @@ fun ExtrudedText(
 
 @Composable
 fun PrayerCardWithTimer(
-    mylocation: String? = "",
+    mylocation: MutableState<Coordinates>,
     onCardClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -216,23 +265,23 @@ fun PrayerCardWithTimer(
 
     val (prayEnum, targetTime) = PrayerTimesHelper.getNextPrayer()!!
 
-/*    LaunchedEffect(Unit) {
-        withContext(Dispatchers.IO) {
-            var result =""
-            if (mylocation == null){
-                val latitude = SharedPreferencesImpl(context).fetchData("latitude", 30.033333)
-                val longitude = SharedPreferencesImpl(context).fetchData("longitude", 31.233334)
-                result = context.getCityAndCountryInArabic(latitude, longitude)
-            }
-            else{
-                result = context.getCityAndCountryInArabic(mylocation.latitude, mylocation.longitude)
-            }
+    /*    LaunchedEffect(Unit) {
+            withContext(Dispatchers.IO) {
+                var result =""
+                if (mylocation == null){
+                    val latitude = SharedPreferencesImpl(context).fetchData("latitude", 30.033333)
+                    val longitude = SharedPreferencesImpl(context).fetchData("longitude", 31.233334)
+                    result = context.getCityAndCountryInArabic(latitude, longitude)
+                }
+                else{
+                    result = context.getCityAndCountryInArabic(mylocation.latitude, mylocation.longitude)
+                }
 
-            withContext(Dispatchers.Main) {
-                location = result
+                withContext(Dispatchers.Main) {
+                    location = result
+                }
             }
-        }
-    }*/
+        }*/
 
     LaunchedEffect(targetTime) {
         while (true) {
@@ -252,11 +301,11 @@ fun PrayerCardWithTimer(
 
     HomeHeader(
         hijriDate = DateHelper.getTodayHijriDate(),
-        location = mylocation?:"",
-        prayerName = if (PrayerTimesHelper.isTodayFriday() && prayEnum == PrayEnum.ZUHR ) "صلاة الجمعة" else prayEnum.value,
+        coordinates = mylocation ,
+        prayerName = if (PrayerTimesHelper.isTodayFriday() && prayEnum == PrayEnum.ZUHR) "صلاة الجمعة" else prayEnum.value,
         prayerTime = targetTime.toArabicTime().convertNumbersToArabic(),
         remainingTime = remainingTime.convertNumbersToArabic()
-    ){
+    ) {
         onCardClick()
     }
 }

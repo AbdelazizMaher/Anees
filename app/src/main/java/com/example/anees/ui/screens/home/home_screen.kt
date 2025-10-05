@@ -17,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,10 +27,10 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.batoulapps.adhan.Coordinates
 import com.example.anees.R
 import com.example.anees.ui.screens.home.component.ComponentCard
 import com.example.anees.ui.screens.home.component.PrayerCardWithTimer
@@ -40,28 +41,26 @@ import com.example.anees.utils.location.handleLocationPermission
 import com.example.anees.utils.location.isLocationEnabled
 
 
-@Preview(showBackground = true,locale = "en")
 @Composable
 fun HomeScreen(
-    location:String? = "",
+    location: MutableState<Coordinates>,
     navToSebiha: () -> Unit = {},
-               navToQibla: () -> Unit = {},
-               navToQuran: () -> Unit = {},
-               navToAzkar: () -> Unit = {},
-               navToHadith: () -> Unit = {},
-               navToRadio: () -> Unit={},
-               navToTafsir: () -> Unit={},
-               navToPrayer: () -> Unit = {} ,
-               navToReciters: () -> Unit = {},
-               navToNamesOfAllah: () -> Unit = {},
-               navToHisnAlMuslim: () -> Unit = {}
+    navToQibla: () -> Unit = {},
+    navToQuran: () -> Unit = {},
+    navToAzkar: () -> Unit = {},
+    navToHadith: () -> Unit = {},
+    navToRadio: () -> Unit ={},
+    navToTafsir: () -> Unit ={},
+    navToPrayer: () -> Unit = {},
+    navToReciters: () -> Unit = {},
+    navToNamesOfAllah: () -> Unit = {},
+    navToHisnAlMuslim: () -> Unit = {}
 ){
 
     val ctx=LocalContext.current
     val activity = ctx as Activity
     Box {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -69,7 +68,6 @@ fun HomeScreen(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                     .background(Color.Transparent)
-
             ) {
                 PrayerCardWithTimer(location) {
                     if (ctx.checkPermission()&& ctx.isLocationEnabled()) {

@@ -30,7 +30,7 @@ object PrayerTimesHelper {
         this.context = context
     }
 
-    private fun getCoordinates(): Coordinates {
+    fun getCoordinates(): Coordinates {
         val latitude = SharedPreferencesImpl(context).fetchData("latitude", 30.033333)
         val longitude = SharedPreferencesImpl(context).fetchData("longitude", 31.233334)
         return Coordinates(latitude, longitude)

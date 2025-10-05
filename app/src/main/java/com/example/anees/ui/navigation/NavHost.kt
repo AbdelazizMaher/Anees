@@ -1,6 +1,7 @@
 package com.example.anees.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -48,17 +49,18 @@ import com.example.anees.utils.prayer_helper.PrayerTimesHelper
 @Composable
 fun SetUpNavHost(
     navController: NavHostController,
-    location:String? = ""
+    location: MutableState<Coordinates>,
+    readyToShowPermissions: MutableState<Boolean>
 ) {
     NavHost(
         navController = navController,
         startDestination = ScreenRoute.SplashScreen
-
     ) {
         composable<ScreenRoute.SplashScreen> {
             SplashScreen(navToHome = {
                 navController.popBackStack()
                 navController.navigate(ScreenRoute.HomeScreen)
+                readyToShowPermissions.value = true
             })
         }
 

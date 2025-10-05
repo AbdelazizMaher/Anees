@@ -1,8 +1,11 @@
 package com.example.anees.ui.screens.qibla
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.os.Vibrator
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -18,6 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -32,23 +38,42 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.anees.R
+import com.example.anees.enums.AppPermission
+import com.example.anees.ui.dialog.AneesAlertDialog
 import com.example.anees.ui.screens.hadith.components.QiblaTitle
 import com.example.anees.utils.location.LocationProvider
 
 @Preview(showBackground = true)
 @Composable
 fun QiblaScreen(
-    navToHome: () -> Unit = {}
+    onBackClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val activity = context as Activity
     val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
     val viewModel: QiblaViewModel = viewModel()
+    var showNotificationPermissionDialog by remember { mutableStateOf(true) }
 
-    LaunchedEffect(Unit) {
-        LocationProvider(context).fetchLatLong(activity) { location ->
-            viewModel.updateQiblaDirection(location.latitude, location.longitude)
+    val locationLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+
+        if (granted) {
+            showNotificationPermissionDialog = false
+            LocationProvider(context).fetchLatLong() { location ->
+                viewModel.updateQiblaDirection(location.latitude, location.longitude)
+            }
         }
+    }
+
+    if (showNotificationPermissionDialog && !AppPermission.Location.isGranted(context)) {
+        AneesAlertDialog(
+            title = AppPermission.Location.title,
+            message = AppPermission.Location.message,
+            onConfirmLabel = "سماح",
+            onConfirm = { locationLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION) },
+            onDismiss = onBackClick
+        )
     }
 
     val deviceAzimuth by viewModel.deviceAzimuth
@@ -68,7 +93,12 @@ fun QiblaScreen(
     LaunchedEffect(isAligned) {
         if (isAligned) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                vibrator.vibrate(android.os.VibrationEffect.createOneShot(500, android.os.VibrationEffect.DEFAULT_AMPLITUDE))
+                vibrator.vibrate(
+                    android.os.VibrationEffect.createOneShot(
+                        500,
+                        android.os.VibrationEffect.DEFAULT_AMPLITUDE
+                    )
+                )
             } else {
                 vibrator.vibrate(500)
             }
@@ -85,13 +115,15 @@ fun QiblaScreen(
         animationSpec = tween(300, easing = LinearEasing)
     )
 
-    Column (
-        Modifier.fillMaxSize().padding(top = 48.dp)
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(top = 48.dp)
             .background(color = Color(0xFF272727)),
 
-        ){
+        ) {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-            QiblaTitle(title = "القبلة", onBackClick = { navToHome()}, size = 24)
+            QiblaTitle(title = "القبلة", onBackClick = { onBackClick() }, size = 24)
         }
         Box(
             modifier = Modifier

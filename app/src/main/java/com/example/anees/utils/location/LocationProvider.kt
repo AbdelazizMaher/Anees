@@ -20,11 +20,7 @@ class LocationProvider(private val context: Context) {
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
     private lateinit var locationCallback: LocationCallback
 
-    fun fetchLatLong(activity: Activity, onResult: (Location) -> Unit) {
-        if (!checkPermissions()) {
-            requestPermissions(activity)
-            return
-        }
+    fun fetchLatLong(onResult: (Location) -> Unit) {
         if (!context.isLocationEnabled()) {
             context.enableLocationService()
             return

@@ -36,11 +36,11 @@ fun SubCards(
         ComponentCard(
             size = .31f, title = "القبلة",
             onClick = {
-                if (ctx.checkPermission() && ctx.isLocationEnabled()) {
+//                if (ctx.checkPermission() && ctx.isLocationEnabled()) {
                     navToQibla()
-                } else {
-                    ctx.handleLocationPermission(activity)
-                }
+//                } else {
+//                    ctx.handleLocationPermission(activity)
+//                }
             }, fontId = R.font.othmani, brush = Brush.verticalGradient(
                 colors = listOf(
                     Color(0xFFB9745C),
