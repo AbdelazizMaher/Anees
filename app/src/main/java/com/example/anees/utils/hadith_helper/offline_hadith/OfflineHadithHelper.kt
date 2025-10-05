@@ -1,7 +1,6 @@
 package com.example.anees.utils.hadith_helper.offline_hadith
 
 import android.content.Context
-import android.util.Log
 import com.example.anees.data.model.HadithOffline
 import com.example.anees.enums.AuthorEdition
 import com.example.anees.utils.loadJSONFromAssets

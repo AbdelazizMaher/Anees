@@ -71,8 +71,10 @@ fun HomeScreenWithDrawer(
     navToReciters: () -> Unit = {},
     navToNamesOfAllah: () -> Unit = {},
     navToSettings: () -> Unit = {},
+    viewModel: HomeViewModel = viewModel(),
     navToHisnAlMuslim: () -> Unit = {},
-    viewModel: HomeViewModel = viewModel()
+    navToPrayScreen: () -> Unit,
+    navToElMahfogat: () -> Unit,
 ) {
     val drawerState = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -187,38 +189,40 @@ fun HomeScreenWithDrawer(
                                     modifier = Modifier.fillMaxWidth(),
                                     fontFamily = FontFamily(Font(R.font.othmani)),
 
-                                    textAlign = TextAlign.End
-                                )
-                            },
-                            actions = {
-                                IconButton(onClick = {
-                                    drawerState.value = !drawerState.value
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Menu,
-                                        contentDescription = "القائمة"
+                                        textAlign = TextAlign.End
                                     )
-                                }
-                            },
-                            navigationIcon = {}
+                                },
+                                actions = {
+                                    IconButton(onClick = {
+                                        drawerState.value = !drawerState.value
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Menu,
+                                            contentDescription = "القائمة"
+                                        )
+                                    }
+                                },
+                                navigationIcon = {}
+                            )
+                        }
+                        HomeScreen(
+                            location = location,
+                            navToSebiha = navToSebiha,
+                            navToQibla = navToQibla,
+                            navToQuran = navToQuran,
+                            navToAzkar = navToAzkar,
+                            navToHadith = navToHadith,
+                            navToRadio = navToRadio,
+                            navToTafsir = navToTafsir,
+                            navToPrayer = navToPrayer,
+                            navToReciters = navToReciters,
+                            navToNamesOfAllah = navToNamesOfAllah,
+                            navToHisnAlMuslim = navToHisnAlMuslim,
+                            navToPrayScreen = navToPrayScreen,
+                            navToElMahfogat = navToElMahfogat,
                         )
                     }
-                    HomeScreen(
-                        location = location,
-                        navToSebiha = navToSebiha,
-                        navToQibla = navToQibla,
-                        navToQuran = navToQuran,
-                        navToAzkar = navToAzkar,
-                        navToHadith = navToHadith,
-                        navToRadio = navToRadio,
-                        navToTafsir = navToTafsir,
-                        navToPrayer = navToPrayer,
-                        navToReciters = navToReciters,
-                        navToNamesOfAllah = navToNamesOfAllah,
-                        navToHisnAlMuslim = navToHisnAlMuslim
-                    )
                 }
-            }
 
         }
 

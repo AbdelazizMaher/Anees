@@ -1,6 +1,5 @@
 package com.example.anees.ui.screens.quran_pdf.quran.components
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable

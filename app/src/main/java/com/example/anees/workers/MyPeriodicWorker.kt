@@ -4,10 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.example.anees.data.local.LocalDataSourceImpl
 import com.example.anees.data.local.sharedpreference.SharedPreferencesImpl
-import com.example.anees.data.repository.Repository
-import com.example.anees.data.repository.RepositoryImpl
 import com.example.anees.utils.Constants
 
 class MyPeriodicWorker(context: Context, params: WorkerParameters) : Worker(context, params) {

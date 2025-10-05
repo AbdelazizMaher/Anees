@@ -1,7 +1,17 @@
 package com.example.anees
 
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,7 +22,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.batoulapps.adhan.CalculationMethod
 import com.batoulapps.adhan.Coordinates
+import com.batoulapps.adhan.PrayerTimes
+import com.batoulapps.adhan.data.DateComponents
 import com.example.anees.data.local.sharedpreference.SharedPreferencesImpl
 import com.example.anees.enums.AppPermission
 import com.example.anees.ui.dialog.PermissionsFlowDialog
@@ -21,9 +34,15 @@ import com.example.anees.utils.SharedModel
 import com.example.anees.utils.extensions.setAllAlarms
 import com.example.anees.utils.location.LocationProvider
 import com.example.anees.utils.prayer_helper.PrayerTimesHelper
+import com.example.anees.utils.location.checkPermission
+import com.example.anees.utils.prayer_helper.PrayerTimesHelper
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Calendar
+import java.util.Date
+import kotlin.jvm.java
 import kotlin.system.exitProcess
+import kotlin.time.Duration.Companion.hours
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

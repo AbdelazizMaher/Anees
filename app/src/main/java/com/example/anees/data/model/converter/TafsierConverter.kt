@@ -1,9 +1,10 @@
 package com.example.anees.data.model.converter
 
 import androidx.room.TypeConverter
+import com.example.anees.data.model.Result
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.example.anees.data.model.Result
+
 class TafsierConverter {
     @TypeConverter
     fun fromResultList(value: List<Result>): String {

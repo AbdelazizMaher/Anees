@@ -16,24 +16,24 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.anees.enums.QuranSurah
-import com.example.anees.ui.screens.tafsir.component.TafsirDeatilsCard
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.text.style.TextAlign
 import com.example.anees.data.model.Response
 import com.example.anees.data.model.TafsierModel
+import com.example.anees.enums.QuranSurah
 import com.example.anees.ui.screens.hadith.components.ScreenTitle
 import com.example.anees.ui.screens.radio.components.ScreenBackground
 import com.example.anees.ui.screens.tafsir.TafsirViewModel
+import com.example.anees.ui.screens.tafsir.component.TafsirDeatilsCard
 
 @Composable
 fun TafsirDetailsScreen(surah: QuranSurah,navToHome:()->Unit) {

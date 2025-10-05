@@ -41,14 +41,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.batoulapps.adhan.Coordinates
 import com.example.anees.R
 import com.example.anees.enums.AppPermission
 import com.example.anees.enums.PrayEnum
 import com.example.anees.ui.dialog.AneesAlertDialog
 import com.example.anees.utils.date_helper.DateHelper
 import com.example.anees.utils.extensions.convertNumbersToArabic
-import com.example.anees.utils.extensions.getCityAndCountryInArabic
 import com.example.anees.utils.extensions.toArabicTime
 import com.example.anees.utils.location.LocationProvider
 import com.example.anees.utils.prayer_helper.PrayerTimesHelper

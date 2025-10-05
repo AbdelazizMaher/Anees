@@ -49,15 +49,17 @@ fun HomeScreen(
     navToQuran: () -> Unit = {},
     navToAzkar: () -> Unit = {},
     navToHadith: () -> Unit = {},
-    navToRadio: () -> Unit ={},
-    navToTafsir: () -> Unit ={},
+    navToRadio: () -> Unit = {},
+    navToTafsir: () -> Unit = {},
     navToPrayer: () -> Unit = {},
     navToReciters: () -> Unit = {},
     navToNamesOfAllah: () -> Unit = {},
-    navToHisnAlMuslim: () -> Unit = {}
-){
+    navToHisnAlMuslim: () -> Unit = {},
+    navToPrayScreen: () -> Unit = {},
+    navToElMahfogat: () -> Unit = {}
+) {
 
-    val ctx=LocalContext.current
+    val ctx = LocalContext.current
     val activity = ctx as Activity
     Box {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
@@ -70,7 +72,7 @@ fun HomeScreen(
                     .background(Color.Transparent)
             ) {
                 PrayerCardWithTimer(location) {
-                    if (ctx.checkPermission()&& ctx.isLocationEnabled()) {
+                    if (ctx.checkPermission() && ctx.isLocationEnabled()) {
                         navToPrayer()
                     } else {
                         ctx.handleLocationPermission(activity)
@@ -101,33 +103,89 @@ fun HomeScreen(
                 QuranCard(onClick = navToQuran)
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 ) {
-                    ComponentCard(size = .45f, title = "الحديث",onClick = navToHadith,id = R.drawable.had)
+                    ComponentCard(
+                        size = .45f,
+                        title = "الحديث",
+                        onClick = navToHadith,
+                        id = R.drawable.had
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
-                    ComponentCard(size = .45f, title = "التفسير",onClick = navToTafsir, id = R.drawable.taf)
+                    ComponentCard(
+                        size = .45f,
+                        title = "التفسير",
+                        onClick = navToTafsir,
+                        id = R.drawable.taf
+                    )
 
                 }
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 ) {
-                    ComponentCard(size = .45f, title = "القراء",onClick = navToReciters,id = R.drawable.sound)
+                    ComponentCard(
+                        size = .45f,
+                        title = "القراء",
+                        onClick = navToReciters,
+                        id = R.drawable.sound
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
-                    ComponentCard(size = .45f, title = "الأذكار",onClick = navToAzkar,id = R.drawable.do3aa)
+                    ComponentCard(
+                        size = .45f,
+                        title = "الأذكار",
+                        onClick = navToAzkar,
+                        id = R.drawable.do3aa
+                    )
 
                 }
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 ) {
-                    ComponentCard(size = .45f, title = "اسماء الله الحسنى",onClick = navToNamesOfAllah,id = R.drawable.allah)
+                    ComponentCard(
+                        size = .45f,
+                        title = "حصن المسلم",
+                        onClick = navToHisnAlMuslim,
+                        id = R.drawable.hisen
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
-                    ComponentCard(size = .45f, title = "حصن المسلم",onClick = navToHisnAlMuslim,id = R.drawable.hisen)
-
+                    ComponentCard(
+                        size = .45f,
+                        title = "كيف أصلي؟",
+                        onClick = navToPrayScreen,
+                        id = R.drawable.prayer_icon
+                    )
                 }
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    ComponentCard(
+                        size = .45f,
+                        title = "المحفوظات",
+                        onClick = navToElMahfogat,
+                        id = R.drawable.downloaded_audio_card_icon
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    ComponentCard(
+                        size = .45f,
+                        title = "اسماء الله الحسنى",
+                        onClick = navToNamesOfAllah,
+                        id = R.drawable.allah
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(48.dp))
-
             }
         }
     }

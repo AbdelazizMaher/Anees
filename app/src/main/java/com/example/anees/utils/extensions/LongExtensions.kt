@@ -1,7 +1,9 @@
 package com.example.anees.utils.extensions
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 fun Long.toArabicTime(): String {
     val date = Date(this)

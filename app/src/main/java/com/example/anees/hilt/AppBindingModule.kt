@@ -1,9 +1,9 @@
 package com.example.anees.hilt
 
 import com.abdok.atmosphere.data.local.sharedPreference.ISharedPreferences
-import com.example.anees.data.local.sharedpreference.SharedPreferencesImpl
 import com.example.anees.data.local.LocalDataSource
 import com.example.anees.data.local.LocalDataSourceImpl
+import com.example.anees.data.local.sharedpreference.SharedPreferencesImpl
 import com.example.anees.data.remote.RemoteDataSource
 import com.example.anees.data.remote.RemoteDataSourceImpl
 import com.example.anees.data.repository.Repository

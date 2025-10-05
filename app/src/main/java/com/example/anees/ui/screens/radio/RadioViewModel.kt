@@ -2,12 +2,12 @@ package com.example.anees.ui.screens.radio
 
 import android.app.Application
 import android.content.Context
-import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import com.example.anees.data.model.radio.RadioStations
+import com.example.anees.data.model.radio.audioStations
 import com.example.anees.receivers.RadioBroadcastReceiver
 import com.example.anees.services.RadioService
 import com.example.anees.utils.media_helper.RadioPlayer
@@ -33,7 +33,10 @@ class RadioViewModel @Inject constructor(private val context: Application) : And
 
     init {
         setupBroadcastReceiver()
-        RadioServiceManager.startRadioService(context, _currentStation.value.url)
+        RadioServiceManager.startRadioService(
+            context,
+            audioStations[currentIndex]
+        )
         _isPlaying.value = true
         currentIndex = 0
         _currentStation.value = radioStations[0]
@@ -63,7 +66,7 @@ class RadioViewModel @Inject constructor(private val context: Application) : And
     }
 
     private fun startRadioService() {
-        RadioServiceManager.startRadioService(context, _currentStation.value.url)
+        RadioServiceManager.startRadioService(context, audioStations[currentIndex])
         _isPlaying.value = true
     }
 

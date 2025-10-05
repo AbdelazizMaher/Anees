@@ -37,12 +37,12 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.anees.R
-import com.example.anees.utils.hadith_helper.AuthorAssets
 import com.example.anees.enums.AuthorEdition
 import com.example.anees.enums.getAuthorsName
 import com.example.anees.ui.screens.hadith.components.ScreenTitle
 import com.example.anees.ui.screens.radio.components.ScreenBackground
 import com.example.anees.utils.extensions.isInternetAvailable
+import com.example.anees.utils.hadith_helper.AuthorAssets
 import com.google.gson.Gson
 
 @Composable

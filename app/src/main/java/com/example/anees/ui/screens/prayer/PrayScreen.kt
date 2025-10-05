@@ -25,7 +25,6 @@ import com.example.anees.ui.screens.prayer.component.PrayerList
 import com.example.anees.ui.screens.prayer.component.PrayerTopBar
 import com.example.anees.ui.screens.radio.components.ScreenBackground
 import com.example.anees.utils.date_helper.DateHelper
-import com.example.anees.utils.extensions.getCityAndCountryInArabic
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 

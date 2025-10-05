@@ -19,11 +19,10 @@ import androidx.core.content.ContextCompat
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.batoulapps.adhan.Coordinates
-import com.example.anees.data.local.sharedpreference.SharedPreferencesImpl
 import com.example.anees.enums.PrayEnum
 import com.example.anees.receivers.AzanAlarmReceiver
 import com.example.anees.utils.prayer_helper.PrayerTimesHelper
+import com.example.anees.utils.reminder_notification.mapPrayEnumToNumber
 import com.example.anees.workers.AlarmResetWorker
 import java.util.Calendar
 import java.util.Locale
@@ -80,6 +79,10 @@ fun Context.setAlarm(
     val intent = Intent(this, AzanAlarmReceiver::class.java)
     intent.putExtra("prayEnum", prayEnum)
     intent.putExtra("time", triggerTimeMillis)
+    val reminderNotificationIntent = Intent(this, AzanAlarmReceiver::class.java)
+    val prayCode = mapPrayEnumToNumber(prayEnum.value)
+    Log.i("TAG", "setAlarm: $prayCode")
+    reminderNotificationIntent.putExtra("soundType", prayCode)
 
     val pendingIntent = PendingIntent.getBroadcast(
         this,
@@ -88,6 +91,12 @@ fun Context.setAlarm(
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
+    val reminderNotificationPendingIntent = PendingIntent.getBroadcast(
+        this,
+        requestCode+5,
+        reminderNotificationIntent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
 
     val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -100,6 +109,12 @@ fun Context.setAlarm(
         AlarmManager.RTC_WAKEUP,
         triggerTimeMillis,
         pendingIntent
+    )
+
+    alarmManager.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP,
+        triggerTimeMillis - (5 * 60 * 1000),
+        reminderNotificationPendingIntent
     )
 }
 fun Context.isVolumeZero(): Boolean {

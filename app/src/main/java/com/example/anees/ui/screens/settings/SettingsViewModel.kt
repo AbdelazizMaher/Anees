@@ -1,6 +1,5 @@
 package com.example.anees.ui.screens.settings
 
-import androidx.compose.runtime.traceEventEnd
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.anees.data.repository.Repository

@@ -1,6 +1,5 @@
 package com.example.anees.ui.screens.azan
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.anees.data.repository.Repository

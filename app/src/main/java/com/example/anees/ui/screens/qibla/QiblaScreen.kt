@@ -32,7 +32,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,7 +42,6 @@ import com.example.anees.ui.dialog.AneesAlertDialog
 import com.example.anees.ui.screens.hadith.components.QiblaTitle
 import com.example.anees.utils.location.LocationProvider
 
-@Preview(showBackground = true)
 @Composable
 fun QiblaScreen(
     onBackClick: () -> Unit = {}

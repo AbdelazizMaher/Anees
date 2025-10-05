@@ -1,6 +1,6 @@
 package com.example.anees.ui.navigation
 
-import com.example.anees.enums.RecitersEnum
+
 import kotlinx.serialization.Serializable
 
 
@@ -44,9 +44,9 @@ sealed class ScreenRoute {
     @Serializable
     object NamesOfAllahScreen : ScreenRoute()
     @Serializable
-    data class  SuraMp3Screen(val reciter: String) : ScreenRoute()
+    data class  SuraMp3Screen(val recitationModel: String , val recitationName : String) : ScreenRoute()
     @Serializable
-    data class  QuranPlayerScreen(val reciter: String , val index: Int) : ScreenRoute()
+    data class  QuranPlayerScreen(val recitationModel: String?, val recitationName: String?, val index: Int, val isOnline: Boolean = true) : ScreenRoute()
     @Serializable
     object HisnAlMuslimScreen : ScreenRoute()
     @Serializable
@@ -60,4 +60,15 @@ sealed class ScreenRoute {
 
     @Serializable
     object  SettingsScreen : ScreenRoute()
+
+    //pray screens
+    @Serializable
+    object PrayScreen : ScreenRoute()
+
+    @Serializable
+    object ElMahfogatScreen : ScreenRoute()
+
+
+    @Serializable
+    object DownloadQuranScreen : ScreenRoute()
 }

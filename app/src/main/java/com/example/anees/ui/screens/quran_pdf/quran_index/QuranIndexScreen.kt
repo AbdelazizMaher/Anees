@@ -28,14 +28,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.example.anees.enums.SuraTypeEnum
-import com.example.anees.R
-import com.example.anees.utils.pdf_helper.SuraIndex
-import com.example.anees.utils.pdf_helper.SuraIndexes
-
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.anees.R
+import com.example.anees.enums.SuraTypeEnum
 import com.example.anees.ui.screens.radio.components.ScreenBackground
 import com.example.anees.utils.extensions.convertNumbersToArabic
+import com.example.anees.utils.pdf_helper.SuraIndex
+import com.example.anees.utils.pdf_helper.SuraIndexes
 
 @Composable
 fun QuranIndexScreen(onIndexButtonClick: () -> Unit) {

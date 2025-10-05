@@ -1,6 +1,5 @@
 package com.example.anees.ui.screens.qibla
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.hardware.Sensor
