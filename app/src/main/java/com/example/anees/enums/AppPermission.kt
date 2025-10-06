@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
-import androidx.compose.ui.graphics.BlendMode.Companion.Overlay
 import androidx.core.content.ContextCompat
 
 enum class AppPermission(val message: String, val title: String) {

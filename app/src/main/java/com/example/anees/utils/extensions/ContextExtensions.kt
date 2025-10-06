@@ -1,22 +1,17 @@
 package com.example.anees.utils.extensions
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.media.AudioManager
 import android.net.ConnectivityManager
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -28,7 +23,6 @@ import com.example.anees.workers.AlarmResetWorker
 import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.TimeUnit
-import androidx.core.net.toUri
 
 fun Context.isInternetAvailable(): Boolean {
     val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -54,7 +48,7 @@ fun Context.cancelAllAlarms() {
 fun Context.setAllAlarms(
 ){
    // cancelAllAlarms()
-    var index = 0;
+    var index = 0
     for (pray in PrayerTimesHelper.getUpcomingPrayers()) {
         setAlarm(
             requestCode = index++,
@@ -71,18 +65,11 @@ fun Context.setAlarm(
     triggerTimeMillis: Long,
     prayEnum: PrayEnum
 ) {
-    Log.e(
-        "TAG1",
-        "setAlarm:$requestCode : ${prayEnum.value} -> ${
-            triggerTimeMillis.toArabicTime().convertNumbersToArabic()
-        }"
-    )
     val intent = Intent(this, AzanAlarmReceiver::class.java)
     intent.putExtra("prayEnum", prayEnum)
     intent.putExtra("time", triggerTimeMillis)
     val reminderNotificationIntent = Intent(this, AzanAlarmReceiver::class.java)
     val prayCode = mapPrayEnumToNumber(prayEnum.value)
-    Log.i("TAG", "setAlarm: $prayCode")
     reminderNotificationIntent.putExtra("soundType", prayCode)
 
     val pendingIntent = PendingIntent.getBroadcast(
@@ -177,9 +164,7 @@ fun Context.getCityAndCountryInArabic(lat: Double, lon: Double): String {
             val city = addresses[0].subAdminArea ?: addresses[0].subAdminArea
             val country = addresses[0].countryName
 
-            Log.d("TAG", "getCityAndCountryInArabic: ${addresses[0]}")
-            Log.d("TAG", "getCityAndCountryInArabic: ${addresses[0].subAdminArea} ${addresses[0].adminArea}")
-            listOfNotNull(city, country).joinToString("، ")
+           listOfNotNull(city, country).joinToString("، ")
 
 
         } else {
@@ -208,7 +193,6 @@ fun Context.openOverlaySettings() {
 }
 
 fun Context.openAlarmSettings(onSkip: () -> Unit = {}) {
-    Log.i("TAG", "openAlarmSettings called")
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

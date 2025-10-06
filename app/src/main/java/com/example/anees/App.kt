@@ -11,7 +11,6 @@ class App : Application(){
 
     override fun onCreate() {
         super.onCreate()
-       // SharedPreferencesImpl.initSharedPreferences(this)
         scheduleMidnightAlarmReset()
         PrayerTimesHelper.init(this)
     }

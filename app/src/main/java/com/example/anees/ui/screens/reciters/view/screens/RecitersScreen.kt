@@ -159,7 +159,6 @@ fun ReciterCard(
         }
     }
 }
-
 @Composable
 fun RecitationsDropdownMenu(
     selectedRecitation: Recitations,
@@ -182,16 +181,15 @@ fun RecitationsDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            Recitations.values().forEach { recitation ->
+            Recitations.entries.forEach { recitation ->
                 DropdownMenuItem(
                     text = { Text(recitation.recitationName) },
                     onClick = {
-                        expanded = false
                         onRecitationSelected(recitation)
+                        expanded = false
                     }
                 )
             }
         }
     }
 }
-
