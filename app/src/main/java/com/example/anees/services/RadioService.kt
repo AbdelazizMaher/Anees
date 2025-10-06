@@ -88,13 +88,13 @@ class RadioService : Service() {
                 updateNotification()
             }
 
-            override fun onPlaybackStateChanged(playbackState: Int) {
-                if (playbackState == Player.STATE_READY && isSura) {
-                    startProgressUpdates()
-                } else if (playbackState == Player.STATE_ENDED || playbackState == Player.STATE_IDLE) {
-                    stopProgressUpdates()
-                }
-            }
+//            override fun onPlaybackStateChanged(playbackState: Int) {
+//                if (playbackState == Player.STATE_READY && isSura) {
+//                    startProgressUpdates()
+//                } else if (playbackState == Player.STATE_ENDED || playbackState == Player.STATE_IDLE) {
+//                    stopProgressUpdates()
+//                }
+//            }
         })
     }
 
