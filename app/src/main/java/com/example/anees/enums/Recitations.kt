@@ -24,6 +24,8 @@ enum class Recitations(
     val recitationName: String,
     val list: List<RecitationModel>
 ) {
+    MUSHAF_MUALIM("المصحف المعلم",mushafMualimList),//المصحف المرتل
+    MUSHAF_MUJAWAD("المصحف المجود",mushafMujawadList),//المصحف المجود;
     HAFS_AN_ASIM("حفص عن عاصم", hafsAnAsimList),
     WARSH_AN_NAFI("ورش عن نافع", warshAnNafiList),
     KHALAF_AN_HAMZA("خلف عن حمزة", KhalafAnHamzaList),
@@ -40,6 +42,4 @@ enum class Recitations(
     SHUBA_AN_ASIM("شعبة عن عاصم",ShubaAnAsimList),
     ABN_ZAKOON("ابن ذكوان عن ابن عامر",IbnZakoonList),
     WARSH_AZRAQ("ورش عن نافع من طريق الأزرق",WarshAzraqList),
-    MUSHAF_MUALIM("المصحف المعلم",mushafMualimList),//المصحف المرتل
-    MUSHAF_MUJAWAD("المصحف المجود",mushafMujawadList),//المصحف المجود;
-}
+   }

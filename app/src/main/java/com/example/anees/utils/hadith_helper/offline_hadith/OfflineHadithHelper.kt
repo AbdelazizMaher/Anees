@@ -12,8 +12,6 @@ object OfflineHadithHelper{
         val gson = Gson()
         val path="hadith/${author.apiKey}/${selectedEdition}.json"
         val jsonString = context.loadJSONFromAssets( path) ?: return null
-        val type = object : TypeToken<HadithOffline>() {}.type
-        val asd=Gson().fromJson<HadithOffline>(jsonString, type)
 
         return try {
             val type = object : TypeToken<HadithOffline>() {}.type
