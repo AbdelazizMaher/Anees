@@ -100,16 +100,16 @@ class RadioNotificationManager(
             .setOnlyAlertOnce(true)
             .setOngoing(isAppInForeground())
 
-        if (showSkipButtons && duration > 0) {
-            builder.setProgress(
-                duration.toInt(),
-                currentPosition.toInt(),
-                false
-            )
-
-            val timeText = formatTime(currentPosition) + " / " + formatTime(duration)
-            builder.setContentText("$subtitle • $timeText")
-        }
+//        if (showSkipButtons && duration > 0) {
+//            builder.setProgress(
+//                duration.toInt(),
+//                currentPosition.toInt(),
+//                false
+//            )
+//
+//            val timeText = formatTime(currentPosition) + " / " + formatTime(duration)
+//            builder.setContentText("$subtitle • $timeText")
+//        }
 
         actions.forEach { action ->
             builder.addAction(action)
