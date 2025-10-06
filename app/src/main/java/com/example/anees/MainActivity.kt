@@ -2,7 +2,6 @@ package com.example.anees
 
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -29,7 +28,6 @@ import kotlin.system.exitProcess
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     lateinit var navController: NavHostController
-    lateinit var locationProvider: LocationProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +40,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val isSyncing = remember { mutableStateOf(false) }
             navController = rememberNavController()
-            var coordinates = remember { mutableStateOf(PrayerTimesHelper.getCoordinates()) }
+            val coordinates = remember { mutableStateOf(PrayerTimesHelper.getCoordinates()) }
             val systemUiController = rememberSystemUiController()
             val readyToShowPermissions = remember { mutableStateOf(false) }
             val isFirstTime =

@@ -1,6 +1,5 @@
 package com.example.anees.utils.pdf_helper
 
-import android.util.Log
 
 data class PageRangeInfo(
     val range: IntRange,
@@ -148,7 +147,6 @@ val quranPageRanges = listOf(
     )
 
 fun getSurahAndJuzForPage(pageNumber: Int): Pair<String, String>? {
-    Log.d("result", "getSurahAndJuzForPage: $pageNumber")
     for (rangeInfo in quranPageRanges) {
         if (pageNumber in rangeInfo.range) {
             val surahWithPrefix = "سوره ${rangeInfo.surahName}"

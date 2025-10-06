@@ -4,11 +4,6 @@ import android.icu.util.IslamicCalendar
 import com.example.anees.utils.extensions.convertNumbersToArabic
 
 object DateHelper {
-
-
-
-
-
     fun getTodayHijriDate(): String {
         val calendar = IslamicCalendar()
 

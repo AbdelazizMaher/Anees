@@ -21,7 +21,6 @@ import com.example.anees.enums.AppPermission
 import com.example.anees.utils.extensions.hasOverlayPermission
 import com.example.anees.utils.extensions.openAlarmSettings
 import com.example.anees.utils.extensions.openOverlaySettings
-import kotlin.to
 
 @Composable
 fun PermissionsFlowDialog(

@@ -1,6 +1,5 @@
 package com.example.anees.ui.screens.home
 
-import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,7 +20,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -32,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.batoulapps.adhan.Coordinates
 import com.example.anees.R
-import com.example.anees.ui.dialog.OverlayBlocker
 import com.example.anees.ui.screens.home.component.ComponentCard
 import com.example.anees.ui.screens.home.component.PrayerCardWithTimer
 import com.example.anees.ui.screens.home.component.QuranCard
@@ -58,8 +55,6 @@ fun HomeScreen(
     isSyncing: MutableState<Boolean>
 ) {
 
-    val ctx = LocalContext.current
-    val activity = ctx as Activity
     Box {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
             Column(

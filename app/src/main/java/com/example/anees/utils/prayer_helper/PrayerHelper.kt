@@ -3,14 +3,10 @@ package com.example.anees.utils.prayer_helper
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.media.RingtoneManager
-import android.net.Uri
-import androidx.core.net.toUri
 import com.batoulapps.adhan.CalculationMethod
 import com.batoulapps.adhan.Coordinates
 import com.batoulapps.adhan.PrayerTimes
 import com.batoulapps.adhan.data.DateComponents
-import com.example.anees.R
 import com.example.anees.data.local.sharedpreference.SharedPreferencesImpl
 import com.example.anees.enums.PrayEnum
 import java.util.Calendar

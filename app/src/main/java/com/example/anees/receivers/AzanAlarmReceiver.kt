@@ -1,25 +1,14 @@
 package com.example.anees.receivers
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.media.RingtoneManager
-import android.net.Uri
-import android.os.Build
 import android.util.Log
-import androidx.core.app.NotificationCompat
-import androidx.core.net.toUri
-import com.example.anees.R
 import com.example.anees.data.local.sharedpreference.SharedPreferencesImpl
 import com.example.anees.enums.PrayEnum
 import com.example.anees.ui.screens.azan.AzanOverlayActivity
 import com.example.anees.utils.Constants
-import com.example.anees.utils.prayer_helper.PrayerTimesHelper
 import com.example.anees.utils.reminder_notification.createReminderNotification
-import com.example.anees.utils.reminder_notification.getReminderNotificationIcon
-import com.example.anees.utils.reminder_notification.getReminderNotificationSound
 
 class AzanAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
