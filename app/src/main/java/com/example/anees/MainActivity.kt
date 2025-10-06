@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val isSyncing = remember { mutableStateOf(false) }
             navController = rememberNavController()
-            var coordinates = remember { mutableStateOf(PrayerTimesHelper.getCoordinates()) }
+            val coordinates = remember { mutableStateOf(PrayerTimesHelper.getCoordinates()) }
             val systemUiController = rememberSystemUiController()
             val readyToShowPermissions = remember { mutableStateOf(false) }
             val isFirstTime =

@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
@@ -152,6 +153,21 @@ fun Context.scheduleMidnightAlarmReset() {
         workRequest
     )
 }
+
+fun openAppSettings(context: Context) {
+    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+        data = Uri.fromParts("package", context.packageName, null)
+    }
+    context.startActivity(intent)
+}
+
+fun Activity.isPermissionPermanentlyDenied(
+    permission: String
+): Boolean {
+    return !ActivityCompat.shouldShowRequestPermissionRationale(this, permission) &&
+            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED
+}
+
 fun Context.getCityAndCountryInArabic(lat: Double, lon: Double): String {
     return try {
         val geocoder = Geocoder(this, Locale("ar"))

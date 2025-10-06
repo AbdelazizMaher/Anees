@@ -1,5 +1,7 @@
 package com.example.anees.ui.screens.prayer.component
 
+import android.Manifest
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -27,7 +29,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.batoulapps.adhan.Coordinates
+import com.example.anees.enums.AppPermission
+import com.example.anees.ui.dialog.rememberPermissionRequestHandler
 import com.example.anees.ui.screens.home.component.SyncLocationButton
+import com.example.anees.ui.screens.home.component.syncLocation
 import com.example.anees.utils.extensions.getCityAndCountryInArabic
 
 @Composable
@@ -37,7 +42,17 @@ fun PrayerTopBar(
     isSyncing: MutableState<Boolean>
 ) {
     val context = LocalContext.current
-    val showLocationPermissionDialog = remember { mutableStateOf(false) }
+    val locationPermissionHandler = rememberPermissionRequestHandler(
+        permission = Manifest.permission.ACCESS_FINE_LOCATION,
+        title = AppPermission.Location.title,
+        message = AppPermission.Location.message,
+        rationaleTitle = "إذن الموقع مطلوب",
+        rationaleMessage = "لا يمكننا تحديد موقعك بدقة بدون إذن الوصول إلى الموقع.\n"
+                + "هذا الإذن ضروري لحساب مواقيت الصلاة الصحيحة في منطقتك.\n"
+                + "يرجى تفعيل إذن الموقع من إعدادات التطبيق يدويًا.",
+        onGranted = { syncLocation(context, coordinates, isSyncing) },
+        permissionToBeChecked = AppPermission.Location
+    )
 
     Row(
         Modifier
@@ -51,21 +66,14 @@ fun PrayerTopBar(
                 coordinates.value.latitude, coordinates.value.longitude
             ), icon = Icons.Default.LocationOn
         )
-        SyncLocationButton(
-            context = context,
-            showLocationPermissionDialog = showLocationPermissionDialog,
-            coordinates = coordinates,
-            isSyncing = isSyncing
-        )
+        SyncLocationButton{ locationPermissionHandler() }
         Spacer(modifier = Modifier.weight(1f))
-
         IconButton(
             onClick = onBackClick,
             modifier = Modifier.size(48.dp),
         ) {
             Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Back")
         }
-
     }
 }
 

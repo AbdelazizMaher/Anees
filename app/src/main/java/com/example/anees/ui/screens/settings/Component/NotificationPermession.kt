@@ -24,7 +24,8 @@ fun NotificationPermissionRequester(
     ) { isGranted ->
         if (!isGranted && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val permission = android.Manifest.permission.POST_NOTIFICATIONS
-            val showRationale = ActivityCompat.shouldShowRequestPermissionRationale(context as Activity, permission)
+            val showRationale =
+                ActivityCompat.shouldShowRequestPermissionRationale(context as Activity, permission)
             if (!showRationale) {
                 onNeverAskAgain()
                 return@rememberLauncherForActivityResult
@@ -37,7 +38,10 @@ fun NotificationPermissionRequester(
         {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 val permission = android.Manifest.permission.POST_NOTIFICATIONS
-                val granted = ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+                val granted = ContextCompat.checkSelfPermission(
+                    context,
+                    permission
+                ) == PackageManager.PERMISSION_GRANTED
                 if (!granted) {
                     permissionLauncher.launch(permission)
                 } else {
