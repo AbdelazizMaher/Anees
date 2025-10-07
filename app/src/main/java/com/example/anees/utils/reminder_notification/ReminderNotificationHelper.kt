@@ -64,6 +64,7 @@ fun createReminderNotification(soundType: Int, context: Context){
         .setContentTitle("اقتربت صلاة $azan")
         .setContentText("إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا")
         .setSmallIcon(notificationIcon)
+        .setTimeoutAfter(120_000)
         .build()
 
     notificationManager.notify(soundType, notification)
