@@ -5,9 +5,7 @@ import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
-import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.media.AudioManager
@@ -15,7 +13,6 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -27,11 +24,6 @@ import com.example.anees.receivers.AzanAlarmReceiver
 import com.example.anees.utils.prayer_helper.PrayerTimesHelper
 import com.example.anees.utils.reminder_notification.mapPrayEnumToNumber
 import com.example.anees.workers.AlarmResetWorker
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.Priority
 import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -214,7 +206,11 @@ fun Context.openAlarmSettings(onSkip: () -> Unit = {}) {
     }
 }
 
-
+fun Context.isLocationEnabled(): Boolean {
+    val locationManager = getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
+    return locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER) ||
+            locationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER)
+}
 
 
 
