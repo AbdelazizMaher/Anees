@@ -2,6 +2,7 @@ package com.example.anees.ui.screens.home.component
 
 import android.Manifest
 import android.content.Context
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -47,9 +48,12 @@ import com.example.anees.R
 import com.example.anees.enums.AppPermission
 import com.example.anees.enums.PrayEnum
 import com.example.anees.ui.dialog.AneesAlertDialog
+import com.example.anees.ui.dialog.rememberPermissionRequestHandler
 import com.example.anees.utils.date_helper.DateHelper
 import com.example.anees.utils.extensions.convertNumbersToArabic
 import com.example.anees.utils.extensions.getCityAndCountryInArabic
+import com.example.anees.utils.extensions.isPermissionPermanentlyDenied
+import com.example.anees.utils.extensions.openAppSettings
 import com.example.anees.utils.extensions.toArabicTime
 import com.example.anees.utils.location.LocationProvider
 import com.example.anees.utils.prayer_helper.PrayerTimesHelper
@@ -67,26 +71,18 @@ fun HomeHeader(
     isSyncing: MutableState<Boolean>,
     onCardClick: () -> Unit = {}
 ) {
-    var showLocationPermissionDialog = remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val locationLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { granted ->
-
-        if (granted) {
-            showLocationPermissionDialog.value = false
-            syncLocation(context, coordinates, isSyncing)
-        }
-    }
-
-    if (showLocationPermissionDialog.value && !AppPermission.Location.isGranted(context)) {
-        AneesAlertDialog(
-            title = AppPermission.Location.title,
-            message = AppPermission.Location.message,
-            onConfirmLabel = "سماح",
-            onConfirm = { locationLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION) },
-            onDismiss = { showLocationPermissionDialog.value = false })
-    }
+    val locationPermissionHandler = rememberPermissionRequestHandler(
+        permission = Manifest.permission.ACCESS_FINE_LOCATION,
+        title = AppPermission.Location.title,
+        message = AppPermission.Location.message,
+        rationaleTitle = "إذن الموقع مطلوب",
+        rationaleMessage = "لا يمكننا تحديد موقعك بدقة بدون إذن الوصول إلى الموقع.\n"
+                + "هذا الإذن ضروري لحساب مواقيت الصلاة الصحيحة في منطقتك.\n"
+                + "يرجى تفعيل إذن الموقع من إعدادات التطبيق يدويًا.",
+        onGranted = { syncLocation(context, coordinates, isSyncing) },
+        permissionToBeChecked = AppPermission.Location
+    )
 
     Column(
         modifier = Modifier
@@ -105,12 +101,7 @@ fun HomeHeader(
                 modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                    SyncLocationButton(
-                        context = context,
-                        showLocationPermissionDialog = showLocationPermissionDialog,
-                        coordinates = coordinates,
-                        isSyncing = isSyncing
-                    )
+                SyncLocationButton(onSync = { locationPermissionHandler() })
                 Text(
                     text = context.getCityAndCountryInArabic(
                         coordinates.value.latitude, coordinates.value.longitude
@@ -125,9 +116,7 @@ fun HomeHeader(
                 color = Color.Black
             )
         }
-
         Spacer(modifier = Modifier.height(4.dp))
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -211,24 +200,9 @@ fun HomeHeader(
 }
 
 @Composable
-fun SyncLocationButton(
-    modifier: Modifier = Modifier,
-    context: Context,
-    showLocationPermissionDialog: MutableState<Boolean>,
-    coordinates: MutableState<Coordinates>,
-    isSyncing: MutableState<Boolean>
-) {
+fun SyncLocationButton(onSync: () -> Unit) {
     IconButton(
-        onClick = {
-            if (!AppPermission.Location.isGranted(context)) {
-                showLocationPermissionDialog.value = true
-            } else syncLocation(
-                coordinates = coordinates,
-                context = context,
-                isSyncing = isSyncing
-            )
-        },
-        modifier = modifier
+        onClick = { onSync() }
     ) {
         Icon(
             imageVector = Icons.Default.Sync,
@@ -239,7 +213,7 @@ fun SyncLocationButton(
     }
 }
 
-private fun syncLocation(
+fun syncLocation(
     context: Context,
     coordinates: MutableState<Coordinates>,
     isSyncing: MutableState<Boolean>
@@ -280,30 +254,8 @@ fun PrayerCardWithTimer(
     isSyncing: MutableState<Boolean>,
     onCardClick: () -> Unit
 ) {
-    val context = LocalContext.current
     var remainingTime by remember { mutableStateOf("") }
-//    var location by remember { mutableStateOf("") }
-
     val (prayEnum, targetTime) = PrayerTimesHelper.getNextPrayer()!!
-
-    /*    LaunchedEffect(Unit) {
-            withContext(Dispatchers.IO) {
-                var result =""
-                if (mylocation == null){
-                    val latitude = SharedPreferencesImpl(context).fetchData("latitude", 30.033333)
-                    val longitude = SharedPreferencesImpl(context).fetchData("longitude", 31.233334)
-                    result = context.getCityAndCountryInArabic(latitude, longitude)
-                }
-                else{
-                    result = context.getCityAndCountryInArabic(mylocation.latitude, mylocation.longitude)
-                }
-
-                withContext(Dispatchers.Main) {
-                    location = result
-                }
-            }
-        }*/
-
     LaunchedEffect(targetTime) {
         while (true) {
             val diff = targetTime - System.currentTimeMillis()
@@ -318,7 +270,6 @@ fun PrayerCardWithTimer(
             delay(1000L)
         }
     }
-
 
     HomeHeader(
         hijriDate = DateHelper.getTodayHijriDate(),

@@ -1,6 +1,8 @@
 package com.example.anees
 
 
+import android.app.ComponentCaller
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -46,13 +48,14 @@ class MainActivity : ComponentActivity() {
             val isFirstTime =
                 SharedPreferencesImpl(this).fetchData("is_first_time_permissions", true)
             if (readyToShowPermissions.value && isFirstTime) {
-                PermissionsFlowDialog(context = this, onLocationGranted = {
-                    locationProvider.fetchLatLong() { location ->
-                        coordinates.value = Coordinates(location.latitude, location.longitude)
-                    }
-                }, onPermissionsFlowFinished = {
-                    SharedPreferencesImpl(this).saveData("is_first_time_permissions", false)
-                })
+                PermissionsFlowDialog(
+                    context = this, onLocationGranted = {
+                        locationProvider.fetchLatLong() { location ->
+                            coordinates.value = Coordinates(location.latitude, location.longitude)
+                        }
+                    }, onPermissionsFlowFinished = {
+                        SharedPreferencesImpl(this).saveData("is_first_time_permissions", false)
+                    })
             }
             LaunchedEffect(coordinates.value) {
                 SharedPreferencesImpl(context).saveData("latitude", coordinates.value.latitude)

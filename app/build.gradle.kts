@@ -124,4 +124,7 @@ dependencies {
     //serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
+    // service location
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+
 }

@@ -22,6 +22,7 @@ import com.example.anees.utils.extensions.hasOverlayPermission
 import com.example.anees.utils.extensions.openAlarmSettings
 import com.example.anees.utils.extensions.openOverlaySettings
 
+
 @Composable
 fun PermissionsFlowDialog(
     onLocationGranted: () -> Unit,
@@ -96,7 +97,7 @@ fun PermissionsFlowDialog(
         AppPermission.Notification -> AppPermission.Notification.message to AppPermission.Notification.title
         AppPermission.Location -> AppPermission.Location.message to AppPermission.Location.title
         AppPermission.Overlay -> AppPermission.Overlay.message to AppPermission.Overlay.title
-        AppPermission.Alarm ->  AppPermission.Alarm.message to AppPermission.Alarm.title
+        AppPermission.Alarm -> AppPermission.Alarm.message to AppPermission.Alarm.title
         else -> null to null
     }
 
@@ -119,7 +120,8 @@ fun PermissionsFlowDialog(
                         } else skipPermission()
                     }
 
-                    AppPermission.Location -> locationLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                    AppPermission.Location -> { locationLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION) }
+
                     AppPermission.Overlay -> {
                         if (context.hasOverlayPermission()) skipPermission()
                         else context.openOverlaySettings()
@@ -140,8 +142,5 @@ fun PermissionsFlowDialog(
         onPermissionsFlowFinished()
     }
 }
-
-
-
 
 

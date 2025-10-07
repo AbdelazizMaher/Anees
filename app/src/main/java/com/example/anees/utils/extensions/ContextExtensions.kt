@@ -1,15 +1,23 @@
 package com.example.anees.utils.extensions
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
+import android.content.IntentSender
+import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.media.AudioManager
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
@@ -19,6 +27,11 @@ import com.example.anees.receivers.AzanAlarmReceiver
 import com.example.anees.utils.prayer_helper.PrayerTimesHelper
 import com.example.anees.utils.reminder_notification.mapPrayEnumToNumber
 import com.example.anees.workers.AlarmResetWorker
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.Priority
 import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -139,6 +152,21 @@ fun Context.scheduleMidnightAlarmReset() {
         workRequest
     )
 }
+
+fun openAppSettings(context: Context) {
+    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+        data = Uri.fromParts("package", context.packageName, null)
+    }
+    context.startActivity(intent)
+}
+
+fun Activity.isPermissionPermanentlyDenied(
+    permission: String
+): Boolean {
+    return !ActivityCompat.shouldShowRequestPermissionRationale(this, permission) &&
+            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED
+}
+
 fun Context.getCityAndCountryInArabic(lat: Double, lon: Double): String {
     return try {
         val geocoder = Geocoder(this, Locale("ar"))
