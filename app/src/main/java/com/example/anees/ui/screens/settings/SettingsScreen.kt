@@ -1,10 +1,6 @@
 package com.example.anees.ui.screens.settings
 
 import android.Manifest
-import android.content.Intent
-import android.os.Build
-import android.provider.Settings
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,18 +11,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.RemoveRedEye
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -35,20 +26,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.anees.enums.AppPermission
 import com.example.anees.enums.AzanRecitersEnum
 import com.example.anees.enums.FajrRecitersEnum
 import com.example.anees.enums.ZekirIntervalsEnum
+import com.example.anees.ui.dialog.AneesAlertDialog
 import com.example.anees.ui.dialog.rememberPermissionRequestHandler
 import com.example.anees.ui.screens.hadith.components.ScreenTitle
 import com.example.anees.ui.screens.radio.components.ScreenBackground
 import com.example.anees.ui.screens.settings.Component.SettingDropdownMenu
 import com.example.anees.ui.screens.settings.Component.SettingSection
 import com.example.anees.ui.screens.settings.Component.SettingSwitchRow
+import com.example.anees.utils.extensions.openOverlaySettings
 import com.example.anees.workers.setNotification
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -102,31 +92,24 @@ fun SettingsScreen(
 
     val showOverlayPermissionDialog = remember { mutableStateOf(false) }
 
-    val requestOverlayPermission = {    // TODO AHMED SAAD
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(context)) {
-                showOverlayPermissionDialog.value = true
-            } else {
-                viewModel.updateAzanNotificationState(true)
-            }
-        }
+    val requestOverlayPermission = {
+        if (AppPermission.Overlay.isGranted(context)) {
+            viewModel.updateAzanNotificationState(true)
+        } else showOverlayPermissionDialog.value = true
     }
 
-    val lifecycleOwner = LocalLifecycleOwner.current
-
-    // Observe lifecycle events
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) {
-                // TODO Ahmed Saad
-            }
-        }
-
-        lifecycleOwner.lifecycle.addObserver(observer)
-
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
+    if (showOverlayPermissionDialog.value) {
+        AneesAlertDialog(
+            title = AppPermission.Overlay.title,
+            message = AppPermission.Overlay.message,
+            onConfirmLabel = "سماح",
+            onDismissLabel = "الغاء",
+            onConfirm = {
+                context.openOverlaySettings()
+                showOverlayPermissionDialog.value = false
+            },
+            onDismiss = { showOverlayPermissionDialog.value = false }
+        )
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -227,30 +210,30 @@ fun SettingsScreen(
         }
     }
 
-    if (showOverlayPermissionDialog.value) {
-        AlertDialog(
-            onDismissRequest = { showOverlayPermissionDialog.value = false },
-            title = { Text("السماح بعرض التنبيهات فوق التطبيقات") },
-            text = {
-                Text("يرجى السماح للتطبيق بعرض التنبيهات فوق التطبيقات الأخرى من خلال الإعدادات.")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    showOverlayPermissionDialog.value = false
-                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION).apply {
-                    }
-                    context.startActivity(intent)
-                }) {
-                    Text("فتح الإعدادات")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showOverlayPermissionDialog.value = false }) {
-                    Text("إلغاء")
-                }
-            }
-        )
-    }
+//    if (showOverlayPermissionDialog.value) {
+//        AlertDialog(
+//            onDismissRequest = { showOverlayPermissionDialog.value = false },
+//            title = { Text("السماح بعرض التنبيهات فوق التطبيقات") },
+//            text = {
+//                Text("يرجى السماح للتطبيق بعرض التنبيهات فوق التطبيقات الأخرى من خلال الإعدادات.")
+//            },
+//            confirmButton = {
+//                TextButton(onClick = {
+//                    showOverlayPermissionDialog.value = false
+//                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION).apply {
+//                    }
+//                    context.startActivity(intent)
+//                }) {
+//                    Text("فتح الإعدادات")
+//                }
+//            },
+//            dismissButton = {
+//                TextButton(onClick = { showOverlayPermissionDialog.value = false }) {
+//                    Text("إلغاء")
+//                }
+//            }
+//        )
+//    }
 
 //    if (showPermissionDialog.value) {
 //        AlertDialog(

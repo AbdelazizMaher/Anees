@@ -1,5 +1,6 @@
 package com.example.anees.ui.dialog
 
+import android.R.id.message
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +27,7 @@ fun AneesAlertDialog(
     title: String,
     message: String,
     onConfirmLabel: String,
+    onDismissLabel: String = "تخطي",
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -82,7 +84,7 @@ fun AneesAlertDialog(
                 modifier = Modifier
                     .padding(horizontal = 4.dp)
             ) {
-                Text("تخطي", color = Color(0xFF6F3A18))
+                Text(onDismissLabel, color = Color(0xFF6F3A18))
             }
         }
     )
