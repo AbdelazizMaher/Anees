@@ -2,9 +2,8 @@ package com.example.anees.ui.screens.home.component
 
 import android.Manifest
 import android.content.Context
-import androidx.activity.compose.LocalActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,13 +46,11 @@ import com.batoulapps.adhan.Coordinates
 import com.example.anees.R
 import com.example.anees.enums.AppPermission
 import com.example.anees.enums.PrayEnum
-import com.example.anees.ui.dialog.AneesAlertDialog
 import com.example.anees.ui.dialog.rememberPermissionRequestHandler
 import com.example.anees.utils.date_helper.DateHelper
 import com.example.anees.utils.extensions.convertNumbersToArabic
 import com.example.anees.utils.extensions.getCityAndCountryInArabic
-import com.example.anees.utils.extensions.isPermissionPermanentlyDenied
-import com.example.anees.utils.extensions.openAppSettings
+import com.example.anees.utils.extensions.isLocationEnabled
 import com.example.anees.utils.extensions.toArabicTime
 import com.example.anees.utils.location.LocationProvider
 import com.example.anees.utils.prayer_helper.PrayerTimesHelper
@@ -156,16 +153,10 @@ fun HomeHeader(
                 }
 
 
-                // التفاصيل الرئيسية في المنتصف
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
-/*                    Image(
-                        painter = painterResource(id = R.drawable.dhuhr), // استبدل بالأيقونة المناسبة
-                        contentDescription = null,
-                        modifier = Modifier.size(36.dp)
-                    )*/
                     Spacer(modifier = Modifier.height(8.dp))
                     ExtrudedText(
                         text = prayerName,
@@ -219,8 +210,15 @@ fun syncLocation(
     isSyncing: MutableState<Boolean>
 ) {
     isSyncing.value = true
+
+    if (!context.isLocationEnabled()) {
+        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        context.startActivity(intent)
+        return
+    }
     LocationProvider(context).fetchLatLong { location ->
         coordinates.value = Coordinates(location.latitude, location.longitude)
+        isSyncing.value = false
     }
 }
 

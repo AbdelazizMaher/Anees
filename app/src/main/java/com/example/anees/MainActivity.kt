@@ -1,13 +1,11 @@
 package com.example.anees
 
-
-import android.app.ComponentCaller
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,6 +18,7 @@ import com.example.anees.enums.AppPermission
 import com.example.anees.ui.dialog.PermissionsFlowDialog
 import com.example.anees.ui.navigation.SetUpNavHost
 import com.example.anees.utils.SharedModel
+import com.example.anees.utils.extensions.isLocationEnabled
 import com.example.anees.utils.extensions.setAllAlarms
 import com.example.anees.utils.location.LocationProvider
 import com.example.anees.utils.prayer_helper.PrayerTimesHelper
@@ -29,7 +28,9 @@ import kotlin.system.exitProcess
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    lateinit var navController: NavHostController
+    private lateinit var navController: NavHostController
+    private var isSyncing: MutableState<Boolean>? = null
+    private var coordinates: MutableState<Coordinates>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,49 +41,72 @@ class MainActivity : ComponentActivity() {
         val context = this
 
         setContent {
-            val isSyncing = remember { mutableStateOf(false) }
+            val syncingState = remember { mutableStateOf(false) }
+            val coordinatesState = remember {
+                mutableStateOf(PrayerTimesHelper.getCoordinates())
+            }
+            isSyncing = syncingState
+            coordinates = coordinatesState
             navController = rememberNavController()
-            val coordinates = remember { mutableStateOf(PrayerTimesHelper.getCoordinates()) }
+
             val systemUiController = rememberSystemUiController()
             val readyToShowPermissions = remember { mutableStateOf(false) }
             val isFirstTime =
                 SharedPreferencesImpl(this).fetchData("is_first_time_permissions", true)
+
             if (readyToShowPermissions.value && isFirstTime) {
                 PermissionsFlowDialog(
-                    context = this, onLocationGranted = {
-                        locationProvider.fetchLatLong() { location ->
-                            coordinates.value = Coordinates(location.latitude, location.longitude)
+                    context = this,
+                    onLocationGranted = {
+                        locationProvider.fetchLatLong { location ->
+                            coordinatesState.value = Coordinates(location.latitude, location.longitude)
                         }
-                    }, onPermissionsFlowFinished = {
+                    },
+                    onPermissionsFlowFinished = {
                         SharedPreferencesImpl(this).saveData("is_first_time_permissions", false)
-                    })
+                    }
+                )
             }
-            LaunchedEffect(coordinates.value) {
-                SharedPreferencesImpl(context).saveData("latitude", coordinates.value.latitude)
-                SharedPreferencesImpl(context).saveData("longitude", coordinates.value.longitude)
+
+            LaunchedEffect(coordinatesState.value) {
+                SharedPreferencesImpl(context).saveData("latitude", coordinatesState.value.latitude)
+                SharedPreferencesImpl(context).saveData("longitude", coordinatesState.value.longitude)
                 if (AppPermission.Alarm.isGranted(context)) {
                     setAllAlarms()
                 }
-                isSyncing.value = false
+                syncingState.value = false
             }
+
             SideEffect {
                 systemUiController.setStatusBarColor(
-                    color = Color.Transparent, darkIcons = true
+                    color = Color.Transparent,
+                    darkIcons = true
                 )
             }
 
             SetUpNavHost(
-                navController = navController, readyToShowPermissions = readyToShowPermissions,
-                location = coordinates,
-                isSyncing = isSyncing
+                navController = navController,
+                readyToShowPermissions = readyToShowPermissions,
+                location = coordinatesState,
+                isSyncing = syncingState
             )
         }
-
     }
 
     override fun onResume() {
         super.onResume()
         SharedModel.isAppActive = true
+
+        if (isSyncing?.value == true) {
+            if (this.isLocationEnabled()) {
+                LocationProvider(this).fetchLatLong { location ->
+                    coordinates?.value = Coordinates(location.latitude, location.longitude)
+                    isSyncing?.value = false
+                }
+            } else {
+                isSyncing?.value = false
+            }
+        }
     }
 
     override fun onPause() {
@@ -104,10 +128,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-
-
-
-
-
-
