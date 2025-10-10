@@ -1,4 +1,4 @@
-package com.muslim.anees.ui.screens.qibla
+package com.muslim.anees.ui.screens.qibla.viewmodel
 
 import android.app.Application
 import android.content.Context
@@ -6,29 +6,31 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.lifecycle.AndroidViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
 @HiltViewModel
-class QiblaViewModel @Inject constructor(application: Application) : AndroidViewModel(application), SensorEventListener {
+class QiblaViewModel @Inject constructor(application: Application) : AndroidViewModel(application),
+    SensorEventListener {
 
     private val sensorManager = application.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-    private val _deviceAzimuth = mutableStateOf(0f)
+    private val _deviceAzimuth = mutableFloatStateOf(0f)
     val deviceAzimuth = _deviceAzimuth
 
-    private val _bearingToQibla = mutableStateOf(0f)
+    private val _bearingToQibla = mutableFloatStateOf(0f)
     val bearingToQibla = _bearingToQibla
 
     private val rotationMatrix = FloatArray(9)
     private val orientationAngles = FloatArray(3)
 
-    private var qiblaDirection = 0f
+    private val qiblaDirection = mutableFloatStateOf(0f)
     private var lastAzimuth = 0f
     private val alpha = 0.1f
 
@@ -51,14 +53,14 @@ class QiblaViewModel @Inject constructor(application: Application) : AndroidView
             val azimuthDeg = Math.toDegrees(azimuthRad.toDouble()).toFloat()
             val deviceHeading = (azimuthDeg + 360) % 360
 
-            _deviceAzimuth.value = deviceHeading
+            _deviceAzimuth.floatValue = deviceHeading
 
             val smoothedBearing = calculateSmoothedBearing(deviceHeading)
 
             lastAzimuth = smoothedBearing
 
-            if (kotlin.math.abs(_bearingToQibla.value - smoothedBearing) > 1f) {
-                _bearingToQibla.value = smoothedBearing
+            if (abs(_bearingToQibla.floatValue - smoothedBearing) > 1f) {
+                _bearingToQibla.floatValue = smoothedBearing
                 lastAzimuth = smoothedBearing
             }
         }
@@ -72,7 +74,7 @@ class QiblaViewModel @Inject constructor(application: Application) : AndroidView
     }
 
     fun updateQiblaDirection(lat: Double, lon: Double) {
-        qiblaDirection = calculateQiblaAngle(lat, lon)
+        qiblaDirection.floatValue = calculateQiblaAngle(lat, lon)
     }
 
     private fun calculateQiblaAngle(lat: Double, lon: Double): Float {
@@ -91,7 +93,7 @@ class QiblaViewModel @Inject constructor(application: Application) : AndroidView
     }
 
     private fun calculateSmoothedBearing(deviceAzimuth: Float): Float {
-        val bearingToQibla = (qiblaDirection - deviceAzimuth + 360) % 360
+        val bearingToQibla = (qiblaDirection.floatValue - deviceAzimuth + 360) % 360
         val diff = bearingToQibla - lastAzimuth
 
         val smoothedBearing = when {
@@ -107,4 +109,3 @@ class QiblaViewModel @Inject constructor(application: Application) : AndroidView
     }
 
 }
-

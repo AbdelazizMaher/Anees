@@ -1,55 +1,57 @@
-package com.muslim.anees.ui.screens.qibla
+package com.muslim.anees.ui.screens.qibla.view
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
+import android.os.Build
+import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.batoulapps.adhan.Coordinates
 import com.muslim.anees.R
 import com.muslim.anees.enums.AppPermission
 import com.muslim.anees.ui.dialog.AneesAlertDialog
-import com.muslim.anees.ui.screens.hadith.components.QiblaTitle
+import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
+import com.muslim.anees.ui.screens.qibla.view.components.CompassView
+import com.muslim.anees.ui.screens.qibla.view.components.QiblaInfoCard
+import com.muslim.anees.ui.screens.qibla.viewmodel.QiblaViewModel
+import com.muslim.anees.ui.screens.radio.components.ScreenBackground
 import com.muslim.anees.utils.location.LocationProvider
 
 @Composable
 fun QiblaScreen(
-    onBackClick: () -> Unit = {}
+    viewModel: QiblaViewModel = hiltViewModel(),
+    onBackClick: () -> Unit = {},
+    coordinates: MutableState<Coordinates>
 ) {
     val context = LocalContext.current
-    val activity = context as Activity
     val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-    val viewModel: QiblaViewModel = viewModel()
     var showNotificationPermissionDialog by remember { mutableStateOf(true) }
 
     val locationLauncher = rememberLauncherForActivityResult(
@@ -60,6 +62,7 @@ fun QiblaScreen(
             showNotificationPermissionDialog = false
             LocationProvider(context).fetchLatLong() { location ->
                 viewModel.updateQiblaDirection(location.latitude, location.longitude)
+                coordinates.value = Coordinates(location.latitude, location.longitude)
             }
         }
     }
@@ -88,13 +91,16 @@ fun QiblaScreen(
     else
         R.drawable.kaaba_im
 
+    LaunchedEffect(Unit) {
+        viewModel.updateQiblaDirection(coordinates.value.latitude, coordinates.value.longitude)
+    }
     LaunchedEffect(isAligned) {
         if (isAligned) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(
-                    android.os.VibrationEffect.createOneShot(
+                    VibrationEffect.createOneShot(
                         500,
-                        android.os.VibrationEffect.DEFAULT_AMPLITUDE
+                        VibrationEffect.DEFAULT_AMPLITUDE
                     )
                 )
             } else {
@@ -113,62 +119,38 @@ fun QiblaScreen(
         animationSpec = tween(300, easing = LinearEasing)
     )
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .padding(top = 48.dp)
-            .background(color = Color(0xFF272727)),
-
-        ) {
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-            QiblaTitle(title = "القبلة", onBackClick = { onBackClick() }, size = 24)
-        }
-        Box(
+    Box(Modifier.fillMaxSize()) {
+        ScreenBackground()
+        Column(
             modifier = Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
+                .verticalScroll(rememberScrollState())
+                .padding(top = 48.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.compassbg),
-                contentDescription = "Qibla Compass Background",
-                modifier = Modifier
-                    .background(color = Color(0xFF272727))
-                    .align(Alignment.Center)
-            )
-
-            Image(
-                painter = painterResource(id = R.drawable.qiblaa),
-                contentDescription = "Qibla Compass Needle",
-                modifier = Modifier
-                    .rotate(-animatedDeviceRotation)
-                    .align(Alignment.Center)
-            )
-
-            Box(
-                modifier = Modifier
-                    .size(200.dp)
-                    .align(Alignment.Center)
-                    .rotate(animatedQiblaRotation)
-
-            ) {
-                Image(
-                    painter = painterResource(id = kaabaImage),
-                    contentDescription = "Kaaba Direction",
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(top = 8.dp)
-                        .align(Alignment.TopCenter)
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                ScreenTitle(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    title = "القبلة",
+                    onBackClick = { onBackClick() },
+                    size = 24
                 )
             }
-            val displayAngle = ((bearingToQibla % 360) + 360) % 360
-            Text(
-                text = "${displayAngle.toInt()}°",
-                color = Color.White,
-                style = TextStyle(fontSize = 20.sp),
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(top = 20.dp) // Adjust the position if needed
+            Spacer(Modifier.height(8.dp))
+            CompassView(
+                modifier = Modifier.fillMaxWidth(),
+                kaabaImageId = kaabaImage,
+                deviceRotation = animatedDeviceRotation,
+                qiblaRotation = animatedQiblaRotation
+            )
+            Spacer(Modifier.height(8.dp))
+            QiblaInfoCard(
+                bearingToQibla = bearingToQibla,
             )
         }
     }
 }
+
+
+
+
+
+
