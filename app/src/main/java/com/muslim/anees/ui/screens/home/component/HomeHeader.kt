@@ -100,9 +100,7 @@ fun HomeHeader(
             ) {
                 SyncLocationButton(onSync = { locationPermissionHandler() })
                 Text(
-                    text = context.getCityAndCountryInArabic(
-                        coordinates.value.latitude, coordinates.value.longitude
-                    ), fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color.Black
+                    text = context.getCityAndCountryInArabic(), fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color.Black
                 )
 
             }

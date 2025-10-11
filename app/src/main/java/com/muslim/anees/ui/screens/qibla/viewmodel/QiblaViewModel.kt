@@ -16,8 +16,9 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 @HiltViewModel
-class QiblaViewModel @Inject constructor(application: Application) : AndroidViewModel(application),
-    SensorEventListener {
+class QiblaViewModel @Inject constructor(
+    application: Application
+) : AndroidViewModel(application), SensorEventListener {
 
     private val sensorManager = application.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
@@ -107,5 +108,4 @@ class QiblaViewModel @Inject constructor(application: Application) : AndroidView
         lastAzimuth = finalSmoothedBearing
         return finalSmoothedBearing
     }
-
 }

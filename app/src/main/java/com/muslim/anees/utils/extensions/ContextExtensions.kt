@@ -159,10 +159,11 @@ fun Activity.isPermissionPermanentlyDenied(
             ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED
 }
 
-fun Context.getCityAndCountryInArabic(lat: Double, lon: Double): String {
+fun Context.getCityAndCountryInArabic(): String {
     return try {
         val geocoder = Geocoder(this, Locale("ar"))
-        val addresses = geocoder.getFromLocation(lat, lon, 1)
+        val coordinates = PrayerTimesHelper.getCoordinates()
+        val addresses = geocoder.getFromLocation(coordinates.latitude, coordinates.longitude, 1)
 
         if (!addresses.isNullOrEmpty()) {
             val city = addresses[0].subAdminArea ?: addresses[0].subAdminArea
