@@ -59,9 +59,7 @@ fun PrayerTopBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         LocationChip(
-            location = context.getCityAndCountryInArabic(
-                coordinates.value.latitude, coordinates.value.longitude
-            ), icon = Icons.Default.LocationOn
+            location = context.getCityAndCountryInArabic(), icon = Icons.Default.LocationOn
         )
         SyncLocationButton{ locationPermissionHandler() }
         Spacer(modifier = Modifier.weight(1f))

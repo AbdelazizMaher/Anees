@@ -71,8 +71,7 @@ fun QiblaInfoCard(
                         fontSize = 18.sp,
                         color = Color(0xFF8D6E63),
                         fontWeight = FontWeight.Medium
-                    )
-                }
+                    )                }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
