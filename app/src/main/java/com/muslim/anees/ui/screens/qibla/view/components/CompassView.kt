@@ -25,7 +25,7 @@ fun CompassView(
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.compassbg_1),
+            painter = painterResource(id = R.drawable.compassbg),
             contentDescription = "Qibla Compass Background",
             contentScale = ContentScale.FillWidth,
             modifier = Modifier.align(Alignment.Center)
