@@ -28,7 +28,7 @@ import com.muslim.anees.ui.screens.home.HomeScreenWithDrawer
 import com.muslim.anees.ui.screens.how_to_pray_screen.HowToPrayScreen
 import com.muslim.anees.ui.screens.names_of_allah.NamesOfAllahScreen
 import com.muslim.anees.ui.screens.prayer.PrayerScreen
-import com.muslim.anees.ui.screens.qibla.QiblaScreen
+import com.muslim.anees.ui.screens.qibla.view.QiblaScreen
 import com.muslim.anees.ui.screens.quran_pdf.juz_index.JuzIndexScreen
 import com.muslim.anees.ui.screens.quran_pdf.khatm.KhatmQuranDuaScreen
 import com.muslim.anees.ui.screens.quran_pdf.quran.QuranPDFViewerScreen
@@ -134,9 +134,13 @@ fun SetUpNavHost(
             })
         }
         composable<ScreenRoute.QiblaScreen> {
-            QiblaScreen {
-                navController.popBackStack()
-            }
+            QiblaScreen(
+                coordinates = location,
+                onBackClick = {
+                    navController.navigateUp()
+                },
+
+            )
         }
 
         composable<ScreenRoute.CompleteQuranScreen> {
