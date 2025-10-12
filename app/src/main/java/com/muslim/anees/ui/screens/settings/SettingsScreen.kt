@@ -34,7 +34,7 @@ import com.muslim.anees.enums.ZekirIntervalsEnum
 import com.muslim.anees.ui.dialog.AneesAlertDialog
 import com.muslim.anees.ui.dialog.rememberPermissionRequestHandler
 import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.ui.screens.settings.Component.SettingDropdownMenu
 import com.muslim.anees.ui.screens.settings.Component.SettingSection
 import com.muslim.anees.ui.screens.settings.Component.SettingSwitchRow

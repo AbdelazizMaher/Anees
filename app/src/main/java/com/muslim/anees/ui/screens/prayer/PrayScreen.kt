@@ -23,7 +23,7 @@ import com.muslim.anees.ui.screens.prayer.component.DateSection
 import com.muslim.anees.ui.screens.prayer.component.HeaderWithTimer
 import com.muslim.anees.ui.screens.prayer.component.PrayerList
 import com.muslim.anees.ui.screens.prayer.component.PrayerTopBar
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.utils.date_helper.DateHelper
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 

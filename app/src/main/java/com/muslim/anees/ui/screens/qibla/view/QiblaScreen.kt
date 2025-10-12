@@ -41,7 +41,7 @@ import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
 import com.muslim.anees.ui.screens.qibla.view.components.CompassView
 import com.muslim.anees.ui.screens.qibla.view.components.QiblaInfoCard
 import com.muslim.anees.ui.screens.qibla.viewmodel.QiblaViewModel
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.utils.location.LocationProvider
 
 @Composable

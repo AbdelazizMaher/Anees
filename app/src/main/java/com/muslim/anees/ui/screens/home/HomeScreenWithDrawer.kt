@@ -54,7 +54,7 @@ import com.muslim.anees.R
 import com.muslim.anees.ui.dialog.OverlayBlocker
 import com.muslim.anees.ui.navigation.ScreenRoute
 import com.muslim.anees.ui.screens.home.component.HomeDrawer
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

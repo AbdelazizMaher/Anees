@@ -49,7 +49,7 @@ import com.muslim.anees.R
 import com.muslim.anees.data.model.RecitationModel
 import com.muslim.anees.enums.Recitations
 import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.ui.screens.reciters.view_model.ReciterViewModel
 
 @Composable

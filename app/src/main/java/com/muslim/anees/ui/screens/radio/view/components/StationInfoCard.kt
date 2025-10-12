@@ -1,4 +1,4 @@
-package com.muslim.anees.ui.screens.radio.components
+package com.muslim.anees.ui.screens.radio.view.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

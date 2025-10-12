@@ -57,7 +57,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.muslim.anees.R
 import com.muslim.anees.data.model.Sebiha
 import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.ui.screens.sebha.component.AzkarButtomSheet
 import com.muslim.anees.utils.extensions.convertNumbersToArabic
 import kotlinx.coroutines.delay

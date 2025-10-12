@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.sp
 import com.muslim.anees.R
 import com.muslim.anees.enums.AuthorEdition
 import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.utils.extensions.isInternetAvailable
 import com.muslim.anees.utils.hadith_helper.getSections
 import com.google.gson.Gson

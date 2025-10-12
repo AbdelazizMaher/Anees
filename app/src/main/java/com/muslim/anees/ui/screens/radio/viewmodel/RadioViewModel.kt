@@ -1,4 +1,4 @@
-package com.muslim.anees.ui.screens.radio
+package com.muslim.anees.ui.screens.radio.viewmodel
 
 import android.app.Application
 import android.content.Context
@@ -45,10 +45,10 @@ class RadioViewModel @Inject constructor(private val context: Application) : And
 
     fun playPauseRadio() {
         if (_isPlaying.value) {
-            RadioServiceManager.sendRadioAction(context, RadioService.ACTION_PAUSE)
+            RadioServiceManager.sendRadioAction(context, RadioService.Companion.ACTION_PAUSE)
             _isPlaying.value = false
         } else {
-            RadioServiceManager.sendRadioAction(context, RadioService.ACTION_PLAY)
+            RadioServiceManager.sendRadioAction(context, RadioService.Companion.ACTION_PLAY)
             _isPlaying.value = true
         }
     }
@@ -83,8 +83,8 @@ class RadioViewModel @Inject constructor(private val context: Application) : And
         )
 
         val filter = IntentFilter().apply {
-            addAction(RadioBroadcastReceiver.ACTION_PLAYBACK_STATE)
-            addAction(RadioBroadcastReceiver.ACTION_STATION_CHANGED)
+            addAction(RadioBroadcastReceiver.Companion.ACTION_PLAYBACK_STATE)
+            addAction(RadioBroadcastReceiver.Companion.ACTION_STATION_CHANGED)
             priority = IntentFilter.SYSTEM_HIGH_PRIORITY
         }
 
@@ -103,9 +103,3 @@ class RadioViewModel @Inject constructor(private val context: Application) : And
         }
     }
 }
-
-
-
-
-
-

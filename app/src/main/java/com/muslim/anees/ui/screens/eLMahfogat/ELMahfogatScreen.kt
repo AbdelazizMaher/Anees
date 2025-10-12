@@ -37,7 +37,7 @@ import com.muslim.anees.ui.screens.eLMahfogat.component.ElMahafogatZekrTitleCard
 import com.muslim.anees.ui.screens.eLMahfogat.component.ElMahfogatTopBar
 import com.muslim.anees.ui.screens.eLMahfogat.component.EmptyPlaceholder
 import com.muslim.anees.ui.screens.hadith.components.HadithCard
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)

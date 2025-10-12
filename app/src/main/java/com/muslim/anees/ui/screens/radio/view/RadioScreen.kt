@@ -1,4 +1,4 @@
-package com.muslim.anees.ui.screens.radio
+package com.muslim.anees.ui.screens.radio.view
 
 import android.app.Activity
 import android.content.BroadcastReceiver
@@ -31,15 +31,19 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.muslim.anees.services.RadioService
 import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
-import com.muslim.anees.ui.screens.radio.components.CustomSnackbar
-import com.muslim.anees.ui.screens.radio.components.PlaybackControls
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
-import com.muslim.anees.ui.screens.radio.components.StationImageCard
-import com.muslim.anees.ui.screens.radio.components.StationInfoCard
+import com.muslim.anees.ui.screens.radio.view.components.CustomSnackbar
+import com.muslim.anees.ui.screens.radio.view.components.PlaybackControls
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.StationImageCard
+import com.muslim.anees.ui.screens.radio.view.components.StationInfoCard
+import com.muslim.anees.ui.screens.radio.viewmodel.RadioViewModel
 import com.muslim.anees.utils.SharedModel
 
 @Composable
-fun RadioScreen(viewModel: RadioViewModel = hiltViewModel(),navToHome: () -> Unit = {}) {
+fun RadioScreen(
+    viewModel: RadioViewModel = hiltViewModel(),
+    onBackClick: () -> Unit = {}
+) {
     val isPlaying by viewModel.isPlaying.collectAsStateWithLifecycle()
     val currentStation by viewModel.currentStation.collectAsStateWithLifecycle()
     val snackbarMessage = remember { mutableStateOf<String?>(null) }
@@ -51,7 +55,7 @@ fun RadioScreen(viewModel: RadioViewModel = hiltViewModel(),navToHome: () -> Uni
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 if (SharedModel.isAppActive) {
-                    navToHome()
+                    onBackClick()
                 }else {
                     (context as Activity).finishAffinity()
                 }
@@ -80,7 +84,7 @@ fun RadioScreen(viewModel: RadioViewModel = hiltViewModel(),navToHome: () -> Uni
                     .padding(vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                ScreenTitle( title = "محطة أنيس الإذاعية", onBackClick = {navToHome()}, size = 24)
+                ScreenTitle( title = "محطة أنيس الإذاعية", onBackClick = {onBackClick()}, size = 24)
                 Spacer(modifier = Modifier.height(16.dp))
                 StationImageCard(currentStation)
                 Box(

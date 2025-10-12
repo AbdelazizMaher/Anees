@@ -33,7 +33,7 @@ import com.muslim.anees.ui.screens.quran_pdf.juz_index.JuzIndexScreen
 import com.muslim.anees.ui.screens.quran_pdf.khatm.KhatmQuranDuaScreen
 import com.muslim.anees.ui.screens.quran_pdf.quran.QuranPDFViewerScreen
 import com.muslim.anees.ui.screens.quran_pdf.quran_index.QuranIndexScreen
-import com.muslim.anees.ui.screens.radio.RadioScreen
+import com.muslim.anees.ui.screens.radio.view.RadioScreen
 import com.muslim.anees.ui.screens.reciters.view.screens.QuranPlayerScreen
 import com.muslim.anees.ui.screens.reciters.view.screens.RecitersScreen
 import com.muslim.anees.ui.screens.reciters.view.screens.SuraMp3Screen

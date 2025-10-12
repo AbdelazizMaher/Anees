@@ -21,7 +21,7 @@ import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
 import com.muslim.anees.ui.screens.how_to_pray_screen.component.HowToPrayCard
 import com.muslim.anees.ui.screens.how_to_pray_screen.component.HowToPrayChips
 import com.muslim.anees.ui.screens.how_to_pray_screen.model.toHowToPrayPojo
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.utils.how_to_pray_helper.getHowToPrayChosenList
 import com.muslim.anees.utils.how_to_pray_helper.getHowToPrayYoutubeLink
 import com.muslim.anees.utils.how_to_pray_helper.prayList
