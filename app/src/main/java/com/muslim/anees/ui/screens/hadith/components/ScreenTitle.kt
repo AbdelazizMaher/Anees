@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -21,15 +22,18 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muslim.anees.R
 
+@Preview(showBackground = true)
 @Composable
 fun ScreenTitle(
-    title: String,
-    onBackClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
+    title: String = "محطة أنيس الإذاعية",
+    onBackClick: (() -> Unit) = {},
+    onClick: () -> Unit = {},
     size:Int=28
 ) {
     Box(
@@ -43,16 +47,14 @@ fun ScreenTitle(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            if (onBackClick != null) {
-                IconButton(
-                    onClick = onBackClick,
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "رجوع",
-                        tint = Color(0xFF3B3B3B)
-                    )
-                }
+            IconButton(
+                onClick = onBackClick,
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "رجوع",
+                    tint = Color(0xFF3B3B3B)
+                )
             }
             Text(
                 text = title,
@@ -69,55 +71,16 @@ fun ScreenTitle(
                     )
                 )
             )
-        }
-    }
-}
-
-
-@Composable
-fun QiblaTitle(
-    title: String,
-    onBackClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier,
-    size:Int=28
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 4.dp, bottom = 8.dp, end = 12.dp),
-        contentAlignment = Alignment.CenterEnd
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            if (onBackClick != null) {
-                IconButton(
-                    onClick = onBackClick,
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "رجوع",
-                        tint = Color(0xFFe8e0d5)
-                    )
-                }
-            }
-            Text(
-                text = title,
-                color = Color(0xFFe8e0d5),
-                fontSize = size.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily(Font(R.font.othmani)),
-                textAlign = TextAlign.Right,
-                style = TextStyle(
-                    shadow = Shadow(
-                        color = Color.Black.copy(alpha = 0.3f),
-                        offset = Offset(2f, 2f),
-                        blurRadius = 4f
-                    )
+            IconButton(
+                onClick = onClick
+            ){
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.List,
+                    contentDescription = null,
+                    tint = Color(0xFF3B3B3B)
                 )
-            )
+            }
         }
     }
 }
+
