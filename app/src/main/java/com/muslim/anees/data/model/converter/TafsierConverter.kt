@@ -1,9 +1,9 @@
 package com.muslim.anees.data.model.converter
 
 import androidx.room.TypeConverter
-import com.muslim.anees.data.model.Result
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.muslim.anees.data.model.Result
 
 class TafsierConverter {
     @TypeConverter

@@ -18,7 +18,7 @@ import com.muslim.anees.utils.Constants
 @TypeConverters(TafsierConverter::class)
 @Database(entities =
     [Sebiha::class, TafsierModel::class,  AzkarEntity::class, HadithEntity::class ],
-    version = 2
+    version = 3
 )
 abstract class AneesDatabase : RoomDatabase(){
     abstract fun getDao(): AneesDao

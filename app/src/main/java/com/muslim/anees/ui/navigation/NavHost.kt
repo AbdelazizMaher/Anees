@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.batoulapps.adhan.Coordinates
+import com.google.gson.Gson
 import com.muslim.anees.data.local.sharedpreference.SharedPreferencesImpl
 import com.muslim.anees.data.model.RecitationModel
 import com.muslim.anees.enums.AuthorEdition
@@ -46,7 +47,6 @@ import com.muslim.anees.utils.Constants
 import com.muslim.anees.utils.extensions.convertNumbersToArabic
 import com.muslim.anees.utils.extensions.toArabicTime
 import com.muslim.anees.utils.prayer_helper.PrayerTimesHelper
-import com.google.gson.Gson
 
 
 @Composable

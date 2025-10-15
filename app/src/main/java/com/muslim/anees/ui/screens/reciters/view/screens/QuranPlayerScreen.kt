@@ -66,6 +66,7 @@ import com.muslim.anees.services.RadioService
 import com.muslim.anees.ui.screens.radio.components.ScreenBackground
 import com.muslim.anees.ui.screens.reciters.view_model.QuranPlayerViewModel
 import com.muslim.anees.utils.SharedModel
+import com.muslim.anees.utils.cashed_image.AppImageLoader
 import com.muslim.anees.utils.media_helper.RadioPlayer
 
 @Composable
@@ -154,6 +155,7 @@ fun QuranPlayerScreen(
                     if (isOnline) {
                         AsyncImage(
                             model = currentTrack?.reciterImage,
+                            imageLoader = AppImageLoader.get(context),
                             contentDescription = "صورة القارئ",
                             modifier = Modifier.fillMaxSize()
                         )

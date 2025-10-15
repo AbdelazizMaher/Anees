@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SebihaViewModel @Inject constructor(private val repo: RepositoryImpl): ViewModel() {
-    private val _sebiha= MutableStateFlow(Sebiha(0,0,0, azkarList.first().arabicName))
+    private val _sebiha= MutableStateFlow(Sebiha(0,0,0, 0,azkarList.first().arabicName))
     val sebiha=_sebiha.asStateFlow()
     private val _error= MutableStateFlow("")
     val error=_error.asStateFlow()
@@ -28,7 +28,7 @@ class SebihaViewModel @Inject constructor(private val repo: RepositoryImpl): Vie
              repo.getSebiha().catch {
                  _error.value=it.message.toString()
              }.collect {
-                 _sebiha.value = it ?: Sebiha(0,0,0,azkarList.first().arabicName)
+                 _sebiha.value = it?: Sebiha(0,0,0, 0,azkarList.first().arabicName)
              }
          }
     }

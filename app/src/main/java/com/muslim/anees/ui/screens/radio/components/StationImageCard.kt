@@ -19,14 +19,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.muslim.anees.R
 import com.muslim.anees.data.model.radio.RadioStation
+import com.muslim.anees.utils.cashed_image.AppImageLoader
 
 @Composable
 fun StationImageCard(currentStation: RadioStation) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .padding(horizontal = 12.dp)
@@ -49,6 +52,7 @@ fun StationImageCard(currentStation: RadioStation) {
                 SubcomposeAsyncImage(
                     model = currentStation.imageURL,
                     contentDescription = null,
+                    imageLoader = AppImageLoader.get(context),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(180.dp)

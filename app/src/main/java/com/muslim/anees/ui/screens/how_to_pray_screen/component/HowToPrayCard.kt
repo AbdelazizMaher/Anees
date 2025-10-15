@@ -55,6 +55,7 @@ import coil.compose.SubcomposeAsyncImage
 import com.muslim.anees.R
 import com.muslim.anees.ui.screens.how_to_pray_screen.model.HowToPrayPojo
 import com.muslim.anees.ui.screens.radio.components.CustomSnackbar
+import com.muslim.anees.utils.cashed_image.AppImageLoader
 import com.muslim.anees.utils.extensions.convertNumbersToArabic
 
 
@@ -70,7 +71,6 @@ fun HowToPrayCard(
     val screenHeight = configuration.screenHeightDp.dp
     val context = LocalContext.current
     val snackbarMessage = remember { mutableStateOf<String?>(null) }
-
 
     Card(
         modifier = modifier
@@ -90,6 +90,7 @@ fun HowToPrayCard(
             ) {
                 SubcomposeAsyncImage(
                     model = data.image,
+                    imageLoader = AppImageLoader.get(context),
                     contentDescription = null,
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
@@ -259,4 +260,6 @@ fun HowToPrayCard(
         }
     }
 }
+
+
 
