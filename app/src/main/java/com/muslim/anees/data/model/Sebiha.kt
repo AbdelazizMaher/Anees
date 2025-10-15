@@ -13,3 +13,11 @@ data class Sebiha(
     var name: String
 
 )
+
+
+
+@Entity(tableName = "azkar_sebha")
+data class SebihaZekr(
+    @PrimaryKey()
+    var name: String
+)

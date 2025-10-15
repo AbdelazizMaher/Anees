@@ -7,6 +7,7 @@ import com.muslim.anees.data.local.database.dao.TafsirDao
 import com.muslim.anees.data.model.AzkarEntity
 import com.muslim.anees.data.model.HadithEntity
 import com.muslim.anees.data.model.Sebiha
+import com.muslim.anees.data.model.SebihaZekr
 import com.muslim.anees.data.model.TafsierModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -35,6 +36,24 @@ class LocalDataSourceImpl @Inject constructor(
     override fun getSebiha(): Flow<Sebiha> {
         return dao.getAllSebha()
     }
+    override suspend fun insertZekarInSebha(zekir: SebihaZekr){
+        dao.insertSebhaZekr(zekir)
+    }
+    override suspend fun deleteZekarfromSebha(zekir: SebihaZekr){
+        dao.deleteSebhaZekr(zekir)
+    }
+    override fun getAllZekrFromSebha() = dao.getSebhaZekr()
+
+
+
+
+
+
+
+
+
+
+
 
     // --- Tafsir ---
     override fun getTafsir(id: Int): Flow<TafsierModel?> {
