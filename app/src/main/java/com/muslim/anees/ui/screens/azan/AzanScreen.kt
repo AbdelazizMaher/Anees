@@ -44,13 +44,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.muslim.anees.R
 import com.muslim.anees.enums.AzanRecitersEnum
 import com.muslim.anees.enums.FajrRecitersEnum
 import com.muslim.anees.enums.PrayEnum
 import com.muslim.anees.ui.screens.azan.component.AzanPulseView
 import com.muslim.anees.utils.prayer_helper.PrayerTimesHelper
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Preview
 @Composable

@@ -1,12 +1,12 @@
 package com.muslim.anees.utils.azkar_helper
 
 import android.content.Context
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.muslim.anees.data.model.ZekrModelItem
 import com.muslim.anees.data.model.adhkarItem
 import com.muslim.anees.utils.Constants
 import com.muslim.anees.utils.loadJSONFromAssets
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 object AzkarUtils{
     fun parseAdhkar(context: Context): List<adhkarItem> {
