@@ -57,6 +57,7 @@ import com.muslim.anees.R
 import com.muslim.anees.data.model.Sebiha
 import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
 import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.sebha.component.AddZekrDialog
 import com.muslim.anees.ui.screens.sebha.component.AzkarButtomSheet
 import com.muslim.anees.utils.extensions.convertNumbersToArabic
 import kotlinx.coroutines.delay
@@ -114,6 +115,12 @@ fun SebhaMainScreen(
     isLottieVisible: Boolean
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
+    val showAddZekrDialog = remember { mutableStateOf(false) }
+
+    LaunchedEffect(showBottomSheet) {
+        viewModel.getAllAzkarFromDb()
+    }
+
     var counter = sebiha.value.count
     var rounds = sebiha.value.rounds
     var totalRounds = sebiha.value.totalRounds
@@ -152,8 +159,7 @@ fun SebhaMainScreen(
                     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                         Row(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp),
+                                .fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -357,6 +363,8 @@ fun SebhaMainScreen(
     }
     if (showBottomSheet) {
         AzkarButtomSheet(
+            viewModel =viewModel,
+            showAddZekrDialog = showAddZekrDialog,
             mainZekir,
             onClose = { showBottomSheet = false }) {
             mainZekir = it
@@ -372,6 +380,12 @@ fun SebhaMainScreen(
                 )
             )
         }
+    }
+    if (showAddZekrDialog.value) {
+        AddZekrDialog(
+            viewModel= viewModel,
+            showAddZekrDialog = showAddZekrDialog
+        )
     }
 
 }

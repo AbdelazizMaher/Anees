@@ -11,14 +11,15 @@ import com.muslim.anees.data.local.database.dao.TafsirDao
 import com.muslim.anees.data.model.AzkarEntity
 import com.muslim.anees.data.model.HadithEntity
 import com.muslim.anees.data.model.Sebiha
+import com.muslim.anees.data.model.SebihaZekr
 import com.muslim.anees.data.model.TafsierModel
 import com.muslim.anees.data.model.converter.TafsierConverter
 import com.muslim.anees.utils.Constants
 
 @TypeConverters(TafsierConverter::class)
 @Database(entities =
-    [Sebiha::class, TafsierModel::class,  AzkarEntity::class, HadithEntity::class ],
-    version = 3
+    [Sebiha::class, TafsierModel::class,  AzkarEntity::class, HadithEntity::class, SebihaZekr::class],
+    version = 4
 )
 abstract class AneesDatabase : RoomDatabase(){
     abstract fun getDao(): AneesDao

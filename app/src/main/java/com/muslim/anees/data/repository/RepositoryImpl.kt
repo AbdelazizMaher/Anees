@@ -5,6 +5,7 @@ import com.muslim.anees.data.model.AzkarEntity
 import com.muslim.anees.data.model.EditionResponse
 import com.muslim.anees.data.model.HadithEntity
 import com.muslim.anees.data.model.Sebiha
+import com.muslim.anees.data.model.SebihaZekr
 import com.muslim.anees.data.model.TafsierModel
 import com.muslim.anees.data.remote.RemoteDataSource
 import kotlinx.coroutines.flow.Flow
@@ -33,6 +34,16 @@ class RepositoryImpl @Inject constructor(
     override fun getSebiha(): Flow<Sebiha> {
         return localDataSource.getSebiha()
     }
+
+    override suspend fun insertZekarInSebha(azkar: SebihaZekr){
+        localDataSource.insertZekarInSebha(azkar)
+    }
+    override suspend fun deleteZekarfromSebha(azkar: SebihaZekr){
+        localDataSource.deleteZekarfromSebha(azkar)
+    }
+    override fun getAllZekrFromSebha() = localDataSource.getAllZekrFromSebha()
+
+
 
     override suspend fun getAllSections(name: String): Flow<EditionResponse> {
         return flowOf(remoteDataSource.getAllSections(name))

@@ -58,17 +58,11 @@ fun ComponentCard(
 ) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
-
     val cardWidth = screenWidth * size
     val cardHeight = cardWidth * 0.65f
-
-
-    val iconSize = (cardWidth * 0.28f).coerceAtLeast(40.dp)
-    val bgIconSize = (cardWidth * 0.8f).coerceAtLeast(100.dp)
-
-    val fontSize = fontSizeOption ?: (cardWidth.value * 0.11f).coerceAtLeast(12f)
-
-
+    val iconSize = cardWidth * 0.28f
+    val bgIconSize = cardWidth * 0.8f
+    val fontSize = fontSizeOption ?: (cardWidth.value * 0.11f)
 
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
