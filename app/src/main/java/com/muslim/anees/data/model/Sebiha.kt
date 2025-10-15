@@ -9,6 +9,7 @@ data class Sebiha(
     val id: Int=0,
     var count: Int,
     var rounds: Int ,
+    var totalRounds: Int,
     var name: String
 
 )
