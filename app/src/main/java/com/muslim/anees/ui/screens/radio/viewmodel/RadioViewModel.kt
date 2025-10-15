@@ -23,7 +23,7 @@ class RadioViewModel @Inject constructor(private val context: Application) : And
     private val _isPlaying = MutableStateFlow(false)
     val isPlaying = _isPlaying.asStateFlow()
 
-    private val radioStations = RadioStations.stations
+    private val radioStations = audioStations
     private var currentIndex = 0
 
     private val _currentStation = MutableStateFlow(radioStations[currentIndex])
@@ -40,7 +40,7 @@ class RadioViewModel @Inject constructor(private val context: Application) : And
         _isPlaying.value = true
         currentIndex = 0
         _currentStation.value = radioStations[0]
-        RadioPlayer.setMediaItem(radioStations[0].url)
+        RadioPlayer.setMediaItem(radioStations[0].uri)
     }
 
     fun playPauseRadio() {
@@ -65,8 +65,14 @@ class RadioViewModel @Inject constructor(private val context: Application) : And
         startRadioService()
     }
 
+    fun setCurrentStation(index: Int) {
+        currentIndex = index
+        _currentStation.value = radioStations[index]
+        startRadioService()
+    }
+
     private fun startRadioService() {
-        RadioServiceManager.startRadioService(context, audioStations[currentIndex])
+        RadioServiceManager.startRadioService(context, radioStations[currentIndex])
         _isPlaying.value = true
     }
 

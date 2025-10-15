@@ -159,10 +159,10 @@ class RadioService : Service() {
                 sendStationChangedBroadcast(currentIndex)
             }
             ACTION_SKIP_FORWARD -> {
-                SkipForward()
+                skipForward()
             }
             ACTION_SKIP_BACKWARD -> {
-                SkipBackward()
+                skipBackward()
             }
             else -> {
                 audio = intent?.getParcelableExtra("audio")
@@ -204,7 +204,7 @@ class RadioService : Service() {
             startPlayback(stations[currentIndex].url)
         }
     }
-    private fun SkipForward() {
+    private fun skipForward() {
         if(isSura) {
             val player = RadioPlayer.getPlayer()
             player?.let {
@@ -213,7 +213,7 @@ class RadioService : Service() {
             }
         }
     }
-    private fun SkipBackward() {
+    private fun skipBackward() {
         if(isSura) {
             val player = RadioPlayer.getPlayer()
             player?.let {

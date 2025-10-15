@@ -23,10 +23,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.muslim.anees.R
+import com.muslim.anees.data.model.audio.AudioTrack
 import com.muslim.anees.data.model.radio.RadioStation
 
 @Composable
-fun StationImageCard(currentStation: RadioStation) {
+fun StationImageCard(currentStation: AudioTrack) {
     Card(
         modifier = Modifier
             .padding(horizontal = 12.dp)
@@ -47,7 +48,7 @@ fun StationImageCard(currentStation: RadioStation) {
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 SubcomposeAsyncImage(
-                    model = currentStation.imageURL,
+                    model = currentStation.reciterImage,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

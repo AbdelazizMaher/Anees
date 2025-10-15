@@ -81,9 +81,9 @@ class RadioNotificationManager(
         }
 
         val compactViewIndices = if (showSkipButtons) {
-            intArrayOf(1, 3, 5)
+            intArrayOf(0, 2, 4)
         } else {
-            intArrayOf(0, 1, 3)
+            intArrayOf(0, 1, 2)
         }
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)

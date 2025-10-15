@@ -19,10 +19,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muslim.anees.R
+import com.muslim.anees.data.model.audio.AudioTrack
 import com.muslim.anees.data.model.radio.RadioStation
 
 @Composable
-fun StationInfoCard(currentStation: RadioStation) {
+fun StationInfoCard(currentStation: AudioTrack) {
     Card(
         colors = CardDefaults.cardColors(containerColor = Color(0xFF18181E)),
         modifier = Modifier
@@ -38,7 +39,7 @@ fun StationInfoCard(currentStation: RadioStation) {
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = currentStation.name,
+                    text = currentStation.title,
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,

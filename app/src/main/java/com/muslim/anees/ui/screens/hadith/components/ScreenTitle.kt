@@ -33,7 +33,7 @@ fun ScreenTitle(
     modifier: Modifier = Modifier,
     title: String = "محطة أنيس الإذاعية",
     onBackClick: (() -> Unit) = {},
-    onClick: () -> Unit = {},
+    onClick: (() -> Unit)? = null,
     size:Int=28
 ) {
     Box(
@@ -71,14 +71,16 @@ fun ScreenTitle(
                     )
                 )
             )
-            IconButton(
-                onClick = onClick
-            ){
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.List,
-                    contentDescription = null,
-                    tint = Color(0xFF3B3B3B)
-                )
+            onClick?.let {
+                IconButton(
+                    onClick = it
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.List,
+                        contentDescription = null,
+                        tint = Color(0xFF3B3B3B)
+                    )
+                }
             }
         }
     }
