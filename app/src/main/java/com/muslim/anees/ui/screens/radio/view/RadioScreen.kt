@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.muslim.anees.services.RadioService
@@ -41,7 +43,6 @@ import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.ui.screens.radio.view.components.StationImageCard
 import com.muslim.anees.ui.screens.radio.view.components.StationInfoCard
 import com.muslim.anees.ui.screens.radio.viewmodel.RadioViewModel
-import com.muslim.anees.utils.SharedModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,38 +58,12 @@ fun RadioScreen(
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-
-    DisposableEffect(lifecycleOwner) {
-        val receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                if (SharedModel.isAppActive) {
-                    onBackClick()
-                } else {
-                    (context as Activity).finishAffinity()
-                }
-            }
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(
-                receiver,
-                IntentFilter(RadioService.ACTION_CLOSE),
-                Context.RECEIVER_NOT_EXPORTED
-            )
-        } else {
-            ContextCompat.registerReceiver(
-                context,
-                receiver,
-                IntentFilter(RadioService.ACTION_CLOSE),
-                ContextCompat.RECEIVER_NOT_EXPORTED
-            )
-        }
-
-        onDispose {
-            context.unregisterReceiver(receiver)
-            val stopIntent = Intent(context, RadioService::class.java)
-            context.stopService(stopIntent)
-        }
-    }
+    HandleAudioCloseAction(
+        context = context,
+        lifecycleOwner = lifecycleOwner,
+        onBackClick = onBackClick,
+        onAppClose =  { (context as? Activity)?.finish() }
+    )
 
     Box(modifier = Modifier.fillMaxSize()) {
         ScreenBackground()
@@ -143,7 +118,45 @@ fun RadioScreen(
 
 
 
+@Composable
+fun HandleAudioCloseAction(
+    context: Context,
+    lifecycleOwner: LifecycleOwner,
+    onBackClick: () -> Unit = {},
+    onAppClose: () -> Unit = {}
+) {
+    DisposableEffect(lifecycleOwner) {
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                    onBackClick()
+                } else {
+                    onAppClose()
+                }
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(
+                receiver,
+                IntentFilter(RadioService.ACTION_CLOSE),
+                Context.RECEIVER_NOT_EXPORTED
+            )
+        } else {
+            ContextCompat.registerReceiver(
+                context,
+                receiver,
+                IntentFilter(RadioService.ACTION_CLOSE),
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
+        }
 
+        onDispose {
+            context.unregisterReceiver(receiver)
+            val stopIntent = Intent(context, RadioService::class.java)
+            context.stopService(stopIntent)
+        }
+    }
+}
 
 
 
