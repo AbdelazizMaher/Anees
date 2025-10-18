@@ -63,7 +63,7 @@ import com.muslim.anees.R
 import com.muslim.anees.data.model.RecitationModel
 import com.muslim.anees.enums.SuraTypeEnum
 import com.muslim.anees.services.RadioService
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.ui.screens.reciters.view_model.QuranPlayerViewModel
 import com.muslim.anees.utils.SharedModel
 import com.muslim.anees.utils.cashed_image.AppImageLoader

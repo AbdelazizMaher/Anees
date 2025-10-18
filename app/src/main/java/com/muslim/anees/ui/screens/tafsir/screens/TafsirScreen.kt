@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.google.gson.Gson
 import com.muslim.anees.enums.QuranSurah
 import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.ui.screens.tafsir.component.TafsirCard
 
 @Composable

@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.muslim.anees.R
 import com.muslim.anees.ui.screens.downloaded_audio.component.DownloadedAudioCard
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.utils.downloaded_audio.loadAllAudio
 
 @Composable

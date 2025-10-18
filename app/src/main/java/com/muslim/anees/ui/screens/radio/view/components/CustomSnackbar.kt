@@ -1,4 +1,4 @@
-package com.muslim.anees.ui.screens.radio.components
+package com.muslim.anees.ui.screens.radio.view.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

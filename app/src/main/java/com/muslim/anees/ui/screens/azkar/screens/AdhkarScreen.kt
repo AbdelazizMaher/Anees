@@ -39,7 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.muslim.anees.ui.screens.azkar.AzkarViewModel
 import com.muslim.anees.ui.screens.azkar.component.ZekrCard
 import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.utils.azkar_helper.AzkarUtils
 
 @OptIn(ExperimentalMaterial3Api::class)

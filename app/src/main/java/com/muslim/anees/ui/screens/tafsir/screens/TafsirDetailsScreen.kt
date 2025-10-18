@@ -31,7 +31,7 @@ import com.muslim.anees.data.model.Response
 import com.muslim.anees.data.model.TafsierModel
 import com.muslim.anees.enums.QuranSurah
 import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.ui.screens.tafsir.TafsirViewModel
 import com.muslim.anees.ui.screens.tafsir.component.TafsirDeatilsCard
 

@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
 import com.muslim.anees.ui.screens.hisn_almuslim.components.HisnAlMuslimContentList
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.utils.hisn_almuslim_helper.HisnAlMuslimHelper
 
 @Composable

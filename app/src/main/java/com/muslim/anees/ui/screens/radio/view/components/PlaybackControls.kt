@@ -1,4 +1,4 @@
-package com.muslim.anees.ui.screens.radio.components
+package com.muslim.anees.ui.screens.radio.view.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,7 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.muslim.anees.R
-import com.muslim.anees.ui.screens.radio.RadioViewModel
+import com.muslim.anees.ui.screens.radio.viewmodel.RadioViewModel
 import com.muslim.anees.utils.extensions.isInternetAvailable
 import com.muslim.anees.utils.extensions.isVolumeZero
 

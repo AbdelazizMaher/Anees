@@ -28,7 +28,7 @@ import com.muslim.anees.enums.AuthorEdition
 import com.muslim.anees.ui.screens.hadith.components.DisplayHadiths
 import com.muslim.anees.ui.screens.hadith.components.DisplayOfflineHadiths
 import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.utils.extensions.isInternetAvailable
 import com.muslim.anees.utils.hadith_helper.offline_hadith.OfflineHadithHelper
 

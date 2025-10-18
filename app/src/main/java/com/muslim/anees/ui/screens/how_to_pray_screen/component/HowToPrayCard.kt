@@ -54,7 +54,7 @@ import androidx.core.net.toUri
 import coil.compose.SubcomposeAsyncImage
 import com.muslim.anees.R
 import com.muslim.anees.ui.screens.how_to_pray_screen.model.HowToPrayPojo
-import com.muslim.anees.ui.screens.radio.components.CustomSnackbar
+import com.muslim.anees.ui.screens.radio.view.components.CustomSnackbar
 import com.muslim.anees.utils.cashed_image.AppImageLoader
 import com.muslim.anees.utils.extensions.convertNumbersToArabic
 
@@ -260,6 +260,4 @@ fun HowToPrayCard(
         }
     }
 }
-
-
 

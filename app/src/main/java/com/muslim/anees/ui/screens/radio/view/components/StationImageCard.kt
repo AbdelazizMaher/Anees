@@ -1,4 +1,4 @@
-package com.muslim.anees.ui.screens.radio.components
+package com.muslim.anees.ui.screens.radio.view.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -24,11 +24,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.muslim.anees.R
+import com.muslim.anees.data.model.audio.AudioTrack
 import com.muslim.anees.data.model.radio.RadioStation
 import com.muslim.anees.utils.cashed_image.AppImageLoader
 
 @Composable
-fun StationImageCard(currentStation: RadioStation) {
+fun StationImageCard(currentStation: AudioTrack) {
     val context = LocalContext.current
     Card(
         modifier = Modifier
@@ -50,7 +51,7 @@ fun StationImageCard(currentStation: RadioStation) {
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 SubcomposeAsyncImage(
-                    model = currentStation.imageURL,
+                    model = currentStation.reciterImage,
                     contentDescription = null,
                     imageLoader = AppImageLoader.get(context),
                     contentScale = ContentScale.Crop,

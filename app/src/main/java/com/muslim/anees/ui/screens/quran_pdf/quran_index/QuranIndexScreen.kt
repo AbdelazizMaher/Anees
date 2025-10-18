@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.muslim.anees.R
 import com.muslim.anees.enums.SuraTypeEnum
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.utils.extensions.convertNumbersToArabic
 import com.muslim.anees.utils.pdf_helper.SuraIndex
 import com.muslim.anees.utils.pdf_helper.SuraIndexes

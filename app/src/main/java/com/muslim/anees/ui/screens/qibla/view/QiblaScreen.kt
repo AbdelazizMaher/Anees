@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -41,7 +42,7 @@ import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
 import com.muslim.anees.ui.screens.qibla.view.components.CompassView
 import com.muslim.anees.ui.screens.qibla.view.components.QiblaInfoCard
 import com.muslim.anees.ui.screens.qibla.viewmodel.QiblaViewModel
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.utils.location.LocationProvider
 
 @Composable
@@ -124,6 +125,7 @@ fun QiblaScreen(
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
+                .navigationBarsPadding()
                 .padding(top = 48.dp)
         ) {
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
@@ -145,6 +147,7 @@ fun QiblaScreen(
             QiblaInfoCard(
                 bearingToQibla = bearingToQibla,
             )
+            Spacer(Modifier.height(8.dp))
         }
     }
 }

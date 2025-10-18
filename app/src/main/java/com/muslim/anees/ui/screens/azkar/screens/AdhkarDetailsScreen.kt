@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.muslim.anees.data.model.ZekrModelItem
 import com.muslim.anees.ui.screens.azkar.component.DetailsCard
 import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
-import com.muslim.anees.ui.screens.radio.components.ScreenBackground
+import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.utils.azkar_helper.AzkarUtils
 import kotlinx.coroutines.delay
 

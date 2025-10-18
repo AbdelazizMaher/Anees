@@ -1,4 +1,4 @@
-package com.muslim.anees.ui.screens.radio.components
+package com.muslim.anees.ui.screens.radio.view.components
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -14,7 +14,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.unit.dp
+import kotlin.math.sin
 
 
 @Composable
@@ -37,7 +39,7 @@ fun BarWaveVisualizer() {
         val waveHeight = 20f
         val waveLength = size.width / 1.5f
 
-        val path = androidx.compose.ui.graphics.Path()
+        val path = Path()
 
         path.moveTo(0f, size.height / 2)
 
@@ -45,7 +47,7 @@ fun BarWaveVisualizer() {
         for (i in 0..points) {
             val x = i * size.width / points
             val angle = (i.toFloat() / points * 360f + waveShift) * (Math.PI / 180f)
-            val y = (size.height / 2) + (waveHeight * kotlin.math.sin(angle)).toFloat()
+            val y = (size.height / 2) + (waveHeight * sin(angle)).toFloat()
             path.lineTo(x, y)
         }
 

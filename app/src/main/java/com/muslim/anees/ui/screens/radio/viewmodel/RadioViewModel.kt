@@ -1,4 +1,4 @@
-package com.muslim.anees.ui.screens.radio
+package com.muslim.anees.ui.screens.radio.viewmodel
 
 import android.app.Application
 import android.content.Context
@@ -23,7 +23,7 @@ class RadioViewModel @Inject constructor(private val context: Application) : And
     private val _isPlaying = MutableStateFlow(false)
     val isPlaying = _isPlaying.asStateFlow()
 
-    private val radioStations = RadioStations.stations
+    private val radioStations = audioStations
     private var currentIndex = 0
 
     private val _currentStation = MutableStateFlow(radioStations[currentIndex])
@@ -40,15 +40,15 @@ class RadioViewModel @Inject constructor(private val context: Application) : And
         _isPlaying.value = true
         currentIndex = 0
         _currentStation.value = radioStations[0]
-        RadioPlayer.setMediaItem(radioStations[0].url)
+        RadioPlayer.setMediaItem(radioStations[0].uri)
     }
 
     fun playPauseRadio() {
         if (_isPlaying.value) {
-            RadioServiceManager.sendRadioAction(context, RadioService.ACTION_PAUSE)
+            RadioServiceManager.sendRadioAction(context, RadioService.Companion.ACTION_PAUSE)
             _isPlaying.value = false
         } else {
-            RadioServiceManager.sendRadioAction(context, RadioService.ACTION_PLAY)
+            RadioServiceManager.sendRadioAction(context, RadioService.Companion.ACTION_PLAY)
             _isPlaying.value = true
         }
     }
@@ -65,8 +65,14 @@ class RadioViewModel @Inject constructor(private val context: Application) : And
         startRadioService()
     }
 
+    fun setCurrentStation(index: Int) {
+        currentIndex = index
+        _currentStation.value = radioStations[index]
+        startRadioService()
+    }
+
     private fun startRadioService() {
-        RadioServiceManager.startRadioService(context, audioStations[currentIndex])
+        RadioServiceManager.startRadioService(context, radioStations[currentIndex])
         _isPlaying.value = true
     }
 
@@ -83,8 +89,8 @@ class RadioViewModel @Inject constructor(private val context: Application) : And
         )
 
         val filter = IntentFilter().apply {
-            addAction(RadioBroadcastReceiver.ACTION_PLAYBACK_STATE)
-            addAction(RadioBroadcastReceiver.ACTION_STATION_CHANGED)
+            addAction(RadioBroadcastReceiver.Companion.ACTION_PLAYBACK_STATE)
+            addAction(RadioBroadcastReceiver.Companion.ACTION_STATION_CHANGED)
             priority = IntentFilter.SYSTEM_HIGH_PRIORITY
         }
 
@@ -103,9 +109,3 @@ class RadioViewModel @Inject constructor(private val context: Application) : And
         }
     }
 }
-
-
-
-
-
-
