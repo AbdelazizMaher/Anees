@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.gson.Gson
 import com.muslim.anees.R
 import com.muslim.anees.enums.AuthorEdition
 import com.muslim.anees.enums.getAuthorsName
@@ -43,7 +44,6 @@ import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
 import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.utils.extensions.isInternetAvailable
 import com.muslim.anees.utils.hadith_helper.AuthorAssets
-import com.google.gson.Gson
 
 @Composable
 fun HadithAuthorsScreen(navToHadithsSections: (String) -> Unit, onBackClick: () -> Unit) {

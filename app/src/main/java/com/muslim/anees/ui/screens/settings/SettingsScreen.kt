@@ -22,11 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.muslim.anees.enums.AppPermission
 import com.muslim.anees.enums.AzanRecitersEnum
 import com.muslim.anees.enums.FajrRecitersEnum
@@ -40,9 +40,7 @@ import com.muslim.anees.ui.screens.settings.Component.SettingSection
 import com.muslim.anees.ui.screens.settings.Component.SettingSwitchRow
 import com.muslim.anees.utils.extensions.openOverlaySettings
 import com.muslim.anees.workers.setNotification
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-@Preview(showBackground = true)
 @Composable
 fun SettingsScreen(
     onBackClick: () -> Unit = {},
@@ -66,11 +64,11 @@ fun SettingsScreen(
 
     val context = LocalContext.current
 
-    var zekrNotificationState = viewModel.zekrNotificationState.collectAsStateWithLifecycle()
-    var AzanNotificationState = viewModel.azanNotificationState.collectAsStateWithLifecycle()
-    var selectedFajr = viewModel.currentFajrReciter.collectAsStateWithLifecycle()
-    var selectedInterval = viewModel.currentZekirInterval.collectAsStateWithLifecycle()
-    var selectedAzan = viewModel.currentAzanReciter.collectAsStateWithLifecycle()
+    val zekrNotificationState = viewModel.zekrNotificationState.collectAsStateWithLifecycle()
+    val azanNotificationState = viewModel.azanNotificationState.collectAsStateWithLifecycle()
+    val selectedFajr = viewModel.currentFajrReciter.collectAsStateWithLifecycle()
+    val selectedInterval = viewModel.currentZekirInterval.collectAsStateWithLifecycle()
+    val selectedAzan = viewModel.currentAzanReciter.collectAsStateWithLifecycle()
 
     val intervals = ZekirIntervalsEnum.entries.map { it.label }
     val AzanList = AzanRecitersEnum.entries.map { it.label }
@@ -154,7 +152,7 @@ fun SettingsScreen(
             SettingSection(title = "إعدادات الأذان", color = sectionColor) {
                 SettingSwitchRow(
                     title = "تفعيل تنبيهات الأذان",
-                    isChecked = AzanNotificationState.value,
+                    isChecked = azanNotificationState.value,
                     color = switchColor,
                     onCheckedChange = { isChecked ->
                         if (isChecked) {
@@ -209,62 +207,4 @@ fun SettingsScreen(
 
         }
     }
-
-//    if (showOverlayPermissionDialog.value) {
-//        AlertDialog(
-//            onDismissRequest = { showOverlayPermissionDialog.value = false },
-//            title = { Text("السماح بعرض التنبيهات فوق التطبيقات") },
-//            text = {
-//                Text("يرجى السماح للتطبيق بعرض التنبيهات فوق التطبيقات الأخرى من خلال الإعدادات.")
-//            },
-//            confirmButton = {
-//                TextButton(onClick = {
-//                    showOverlayPermissionDialog.value = false
-//                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION).apply {
-//                    }
-//                    context.startActivity(intent)
-//                }) {
-//                    Text("فتح الإعدادات")
-//                }
-//            },
-//            dismissButton = {
-//                TextButton(onClick = { showOverlayPermissionDialog.value = false }) {
-//                    Text("إلغاء")
-//                }
-//            }
-//        )
-//    }
-
-//    if (showPermissionDialog.value) {
-//        AlertDialog(
-//            onDismissRequest = { showPermissionDialog.value = false },
-//            title = { Text("السماح بالإشعارات") },
-//            text = {
-//                Text()
-//            },
-//            confirmButton = {
-//                TextButton(onClick = {
-//                    showPermissionDialog.value = false
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//                        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-//                            putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-//                        }
-//                        context.startActivity(intent)
-//                    } else {
-//                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-//                            data = Uri.fromParts("package", context.packageName, null)
-//                        }
-//                        context.startActivity(intent)
-//                    }
-//                }) {
-//                    Text("فتح الإعدادات")
-//                }
-//            },
-//            dismissButton = {
-//                TextButton(onClick = { showPermissionDialog.value = false }) {
-//                    Text("إلغاء")
-//                }
-//            }
-//        )
-//    }
 }

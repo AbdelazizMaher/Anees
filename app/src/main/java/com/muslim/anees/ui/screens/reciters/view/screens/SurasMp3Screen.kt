@@ -28,11 +28,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.google.gson.Gson
 import com.muslim.anees.data.model.RecitationModel
 import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.ui.screens.reciters.view.component.Mp3Card
 import com.muslim.anees.utils.sura_mp3_helper.suraUrls
-import com.google.gson.Gson
 
 
 @Composable

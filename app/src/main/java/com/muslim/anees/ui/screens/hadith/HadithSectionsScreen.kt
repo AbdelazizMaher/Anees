@@ -47,13 +47,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.gson.Gson
 import com.muslim.anees.R
 import com.muslim.anees.enums.AuthorEdition
 import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
 import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.utils.extensions.isInternetAvailable
 import com.muslim.anees.utils.hadith_helper.getSections
-import com.google.gson.Gson
 
 @Composable
 fun HadithSectionsScreen(author: AuthorEdition, navToHadithScreen: (String, String) -> Unit, onBackClick: ()-> Unit) {

@@ -43,7 +43,6 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,11 +57,11 @@ import com.muslim.anees.R
 import com.muslim.anees.data.model.Sebiha
 import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
 import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
+import com.muslim.anees.ui.screens.sebha.component.AddZekrDialog
 import com.muslim.anees.ui.screens.sebha.component.AzkarButtomSheet
 import com.muslim.anees.utils.extensions.convertNumbersToArabic
 import kotlinx.coroutines.delay
 
-@Preview(locale = "ar")
 @Composable
 fun SebihaScreen(
     navToHome: () -> Unit = {}
@@ -70,7 +69,7 @@ fun SebihaScreen(
     val viewModel: SebihaViewModel = hiltViewModel()
     val sebiha = viewModel.sebiha.collectAsState()
     var isLottieVisible by remember { mutableStateOf(false) }
-    var rounds = sebiha.value.rounds
+    val rounds = sebiha.value.rounds
     val composition = rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.celebration))
     LaunchedEffect(rounds) {
         if (rounds % 2 == 0 && rounds != 0) {
@@ -101,76 +100,74 @@ fun SebihaScreen(
             )
         }
 
-        Ssebha(sebiha,viewModel,navToHome,isLottieVisible)
+        SebhaMainScreen(sebiha, viewModel, navToHome, isLottieVisible)
 
 
     }
 }
 
 
-
 @Composable
-fun Ssebha(
+fun SebhaMainScreen(
     sebiha: State<Sebiha>,
     viewModel: SebihaViewModel,
     navToHome: () -> Unit = {},
     isLottieVisible: Boolean
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
+    val showAddZekrDialog = remember { mutableStateOf(false) }
+
+    LaunchedEffect(showBottomSheet) {
+        viewModel.getAllAzkarFromDb()
+    }
+
     var counter = sebiha.value.count
     var rounds = sebiha.value.rounds
-    var mainZekir =sebiha.value.name
+    var totalRounds = sebiha.value.totalRounds
+    var mainZekir = sebiha.value.name
 
-    Box(Modifier.fillMaxSize()){
+    Box(Modifier.fillMaxSize()) {
         ScreenBackground()
         Column(
             modifier = Modifier
-                .fillMaxSize().padding(top = 24.dp),
+                .fillMaxSize()
+                .padding(top = 24.dp),
         ) {
 
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                 ScreenTitle(title = "السبحة", onBackClick = navToHome, size = 24)
 
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 8.dp)
                 ) {
 
                     Text(
                         text = mainZekir,
                         color = Color.Black,
-                        fontSize = 28.sp,
+                        fontSize = 24.sp,
                         fontFamily = FontFamily(Font(R.font.othmani)),
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 24.dp)
+                            .padding(horizontal = 16.dp)
                     )
 
                     Spacer(Modifier.height(24.dp))
                     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                         Row(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp),
+                                .fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text("التسبيح: ", color = Color.Black, fontSize = 20.sp)
+                                    Text("إجمالي الدورات:  ", color = Color.Black, fontSize = 20.sp)
                                     Text(
-                                        text = "33/$counter".convertNumbersToArabic(),
-                                        color = Color(0xFF29CA6A),
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 22.sp
-                                    )
-                                }
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text("الدورات: ", color = Color.Black, fontSize = 20.sp)
-                                    Text(
-                                        text = rounds.toString().convertNumbersToArabic(),
+                                        text = totalRounds.toString().convertNumbersToArabic(),
                                         color = Color(0xFF29CA6A),
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 22.sp
@@ -179,14 +176,15 @@ fun Ssebha(
                                     if (!isLottieVisible) {
                                         IconButton(
                                             onClick = {
+                                                totalRounds = 0
                                                 rounds = 0
-                                                counter = 0
                                                 viewModel.addSebiha(
                                                     Sebiha(
                                                         0,
                                                         counter,
                                                         rounds,
-                                                        mainZekir.toString()
+                                                        totalRounds,
+                                                        mainZekir
                                                     )
                                                 )
                                             },
@@ -201,6 +199,54 @@ fun Ssebha(
                                             )
                                         }
                                     }
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text("الدورات:  ", color = Color.Black, fontSize = 20.sp)
+                                    Text(
+                                        text = rounds.toString().convertNumbersToArabic(),
+                                        color = Color(0xFF29CA6A),
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 22.sp
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    if (!isLottieVisible) {
+                                        IconButton(
+                                            onClick = {
+                                                rounds = 0
+                                                counter = 0
+
+                                                viewModel.addSebiha(
+                                                    Sebiha(
+                                                        0,
+                                                        counter,
+                                                        rounds,
+                                                        totalRounds,
+                                                        mainZekir
+                                                    )
+                                                )
+                                            },
+                                            modifier = Modifier
+                                                .size(32.dp)
+                                                .background(Color.Transparent, shape = CircleShape)
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Refresh,
+                                                contentDescription = null,
+                                                tint = Color.Black
+                                            )
+                                        }
+                                    }
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text("التسبيح: ", color = Color.Black, fontSize = 20.sp)
+                                    Text(
+                                        text = "33/$counter".convertNumbersToArabic(),
+                                        color = Color(0xFF29CA6A),
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 22.sp
+                                    )
                                 }
                             }
 
@@ -257,13 +303,15 @@ fun Ssebha(
                                         if (counter > 33) {
                                             counter = 0
                                             rounds++
+                                            totalRounds++
                                         }
                                         viewModel.addSebiha(
                                             Sebiha(
                                                 0,
                                                 counter,
                                                 rounds,
-                                                mainZekir.toString()
+                                                totalRounds,
+                                                mainZekir
                                             )
                                         )
                                     }
@@ -287,7 +335,8 @@ fun Ssebha(
                                                 0,
                                                 counter,
                                                 rounds,
-                                                mainZekir.toString()
+                                                totalRounds,
+                                                mainZekir
                                             )
                                         )
                                     }
@@ -312,15 +361,32 @@ fun Ssebha(
 
         }
     }
-        if (showBottomSheet) {
-            AzkarButtomSheet (mainZekir
-                , onClose = {showBottomSheet = false}){
-                mainZekir = it
-                rounds=0
-                counter=0
-                viewModel.addSebiha(Sebiha(0, counter, rounds,mainZekir.toString()))
-            }
+    if (showBottomSheet) {
+        AzkarButtomSheet(
+            viewModel =viewModel,
+            showAddZekrDialog = showAddZekrDialog,
+            mainZekir,
+            onClose = { showBottomSheet = false }) {
+            mainZekir = it
+            rounds = 0
+            counter = 0
+            viewModel.addSebiha(
+                Sebiha(
+                    0,
+                    counter,
+                    rounds,
+                    totalRounds = sebiha.value.totalRounds,
+                    mainZekir
+                )
+            )
         }
+    }
+    if (showAddZekrDialog.value) {
+        AddZekrDialog(
+            viewModel= viewModel,
+            showAddZekrDialog = showAddZekrDialog
+        )
+    }
 
 }
 

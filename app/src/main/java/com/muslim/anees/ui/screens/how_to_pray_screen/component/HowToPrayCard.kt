@@ -71,7 +71,6 @@ fun HowToPrayCard(
     val context = LocalContext.current
     val snackbarMessage = remember { mutableStateOf<String?>(null) }
 
-
     Card(
         modifier = modifier
             .width(LocalConfiguration.current.screenWidthDp.dp * 0.95f)
@@ -90,6 +89,7 @@ fun HowToPrayCard(
             ) {
                 SubcomposeAsyncImage(
                     model = data.image,
+                    imageLoader = AppImageLoader.get(context),
                     contentDescription = null,
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier

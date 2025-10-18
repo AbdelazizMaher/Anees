@@ -3,6 +3,7 @@ package com.muslim.anees.data.local
 import com.muslim.anees.data.model.AzkarEntity
 import com.muslim.anees.data.model.HadithEntity
 import com.muslim.anees.data.model.Sebiha
+import com.muslim.anees.data.model.SebihaZekr
 import com.muslim.anees.data.model.TafsierModel
 import kotlinx.coroutines.flow.Flow
 
@@ -15,6 +16,10 @@ interface LocalDataSource {
     // --- Sebiha ---
     suspend fun insertSebiha(sebiha: Sebiha)
     fun getSebiha(): Flow<Sebiha>
+    suspend fun insertZekarInSebha(zekir: SebihaZekr)
+    suspend fun deleteZekarfromSebha(zekir: SebihaZekr)
+    fun getAllZekrFromSebha(): Flow<List<SebihaZekr>>
+
 
     // --- Tafsir ---
     suspend fun insertTafsir(tafsir: TafsierModel)

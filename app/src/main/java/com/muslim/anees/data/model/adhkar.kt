@@ -1,8 +1,7 @@
 package com.muslim.anees.data.model
 
-class adhkar : ArrayList<adhkarItem>()
 
-data class adhkarItem(
+data class AdhkarItem(
     val array: List<ZekrModelItem>,
     val audio: String,
     val category: String,

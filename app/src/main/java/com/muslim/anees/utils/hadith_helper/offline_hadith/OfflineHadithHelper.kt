@@ -1,11 +1,11 @@
 package com.muslim.anees.utils.hadith_helper.offline_hadith
 
 import android.content.Context
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.muslim.anees.data.model.HadithOffline
 import com.muslim.anees.enums.AuthorEdition
 import com.muslim.anees.utils.loadJSONFromAssets
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 object OfflineHadithHelper{
     fun getAllHadith(context: Context,author: AuthorEdition,selectedEdition: String): HadithOffline? {

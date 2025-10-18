@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.batoulapps.adhan.Coordinates
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.muslim.anees.data.local.sharedpreference.SharedPreferencesImpl
 import com.muslim.anees.enums.AppPermission
 import com.muslim.anees.ui.dialog.PermissionsFlowDialog
@@ -22,7 +23,6 @@ import com.muslim.anees.utils.extensions.isLocationEnabled
 import com.muslim.anees.utils.extensions.setAllAlarms
 import com.muslim.anees.utils.location.LocationProvider
 import com.muslim.anees.utils.prayer_helper.PrayerTimesHelper
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.system.exitProcess
 

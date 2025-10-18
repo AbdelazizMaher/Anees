@@ -14,11 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.google.gson.Gson
 import com.muslim.anees.enums.QuranSurah
 import com.muslim.anees.ui.screens.hadith.components.ScreenTitle
 import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.ui.screens.tafsir.component.TafsirCard
-import com.google.gson.Gson
 
 @Composable
 fun TafsirScreen(navToHome:()->Unit,navToDetails: (String) -> Unit) {

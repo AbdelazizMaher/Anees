@@ -9,6 +9,15 @@ data class Sebiha(
     val id: Int=0,
     var count: Int,
     var rounds: Int ,
+    var totalRounds: Int,
     var name: String
 
+)
+
+
+
+@Entity(tableName = "azkar_sebha")
+data class SebihaZekr(
+    @PrimaryKey()
+    var name: String
 )

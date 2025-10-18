@@ -4,6 +4,7 @@ import com.muslim.anees.data.model.AzkarEntity
 import com.muslim.anees.data.model.EditionResponse
 import com.muslim.anees.data.model.HadithEntity
 import com.muslim.anees.data.model.Sebiha
+import com.muslim.anees.data.model.SebihaZekr
 import com.muslim.anees.data.model.TafsierModel
 import kotlinx.coroutines.flow.Flow
 
@@ -12,6 +13,10 @@ interface Repository {
     // Sebiha
     suspend fun addSebiha(sebiha: Sebiha)
     fun getSebiha(): Flow<Sebiha>
+
+    suspend fun insertZekarInSebha(azkar: SebihaZekr)
+    suspend fun deleteZekarfromSebha(azkar: SebihaZekr)
+    fun getAllZekrFromSebha(): Flow<List<SebihaZekr>>
 
     // --- Sections (Remote) ---
     suspend fun getAllSections(name: String): Flow<EditionResponse>

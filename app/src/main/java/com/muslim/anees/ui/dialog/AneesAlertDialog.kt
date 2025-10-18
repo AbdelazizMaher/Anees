@@ -30,61 +30,64 @@ fun AneesAlertDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        shape = RoundedCornerShape(20.dp),
-        containerColor = Color(0xFFFFF8F2),
-        title = {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF6F3A18)
-                ),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-        },
-        text = {
-            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
 
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            shape = RoundedCornerShape(20.dp),
+            containerColor = Color(0xFFFFF8F2),
+            title = {
                 Text(
-                    text = message,
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Color(0xFF4E342E),
-                        lineHeight = 20.sp
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF6F3A18)
                     ),
                     textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp)
+                    modifier = Modifier.fillMaxWidth()
                 )
+            },
+            text = {
+                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+
+                    Text(
+                        text = message,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = Color(0xFF4E342E),
+                            lineHeight = 20.sp
+                        ),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = onConfirm,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF6F3A18),
+                        contentColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp)
+                ) {
+                    Text(onConfirmLabel)
+                }
+            },
+            dismissButton = {
+                OutlinedButton(
+                    onClick = onDismiss,
+                    border = BorderStroke(1.dp, Color(0xFF6F3A18)),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp)
+                ) {
+                    Text(onDismissLabel, color = Color(0xFF6F3A18))
+                }
             }
-        },
-        confirmButton = {
-            Button(
-                onClick = onConfirm,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF6F3A18),
-                    contentColor = Color.White
-                ),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .padding(horizontal = 4.dp)
-            ) {
-                Text(onConfirmLabel)
-            }
-        },
-        dismissButton = {
-            OutlinedButton(
-                onClick = onDismiss,
-                border = BorderStroke(1.dp, Color(0xFF6F3A18)),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .padding(horizontal = 4.dp)
-            ) {
-                Text(onDismissLabel, color = Color(0xFF6F3A18))
-            }
-        }
-    )
+        )
+    }
 }

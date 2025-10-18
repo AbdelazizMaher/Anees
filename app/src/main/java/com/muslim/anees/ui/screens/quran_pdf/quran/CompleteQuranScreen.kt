@@ -22,11 +22,11 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.github.barteksc.pdfviewer.PDFView
 import com.muslim.anees.ui.screens.quran_pdf.quran.components.BottomControlBar
 import com.muslim.anees.ui.screens.quran_pdf.quran.components.PdfViewerFromAssets
 import com.muslim.anees.ui.screens.quran_pdf.quran.components.TopControlBar
 import com.muslim.anees.ui.screens.quran_pdf.quran.components.VerticalBookmarkBar
-import com.github.barteksc.pdfviewer.PDFView
 
 @Composable
 fun QuranPDFViewerScreen(

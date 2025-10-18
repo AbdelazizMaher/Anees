@@ -33,14 +33,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muslim.anees.R
 
 
-@Preview
 @Composable
 fun ComponentCard(
     brush: Brush=Brush.verticalGradient(
@@ -60,13 +58,13 @@ fun ComponentCard(
 ) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
-
     val cardWidth = screenWidth * size
     val cardHeight = cardWidth * 0.65f
-
     val iconSize = cardWidth * 0.28f
     val bgIconSize = cardWidth * 0.8f
     val fontSize = fontSizeOption ?: (cardWidth.value * 0.11f)
+
+
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
     Card(
         modifier = Modifier
