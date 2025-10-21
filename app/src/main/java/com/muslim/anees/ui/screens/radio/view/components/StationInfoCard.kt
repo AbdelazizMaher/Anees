@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muslim.anees.R
 import com.muslim.anees.data.model.audio.AudioTrack
-import com.muslim.anees.data.model.radio.RadioStation
 
 @Composable
 fun StationInfoCard(currentStation: AudioTrack) {
