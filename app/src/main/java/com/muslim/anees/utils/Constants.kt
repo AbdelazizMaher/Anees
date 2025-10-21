@@ -28,5 +28,7 @@ object Constants {
     //Reicters
     const val KEY_SELECTED_RECITATION = "KEY_SELECTED_RECITATION"
 
+    const val SEBHA_IMAGE_ID_KEY = "SEBHA_IMAGE_ID_KEY"
+
 
 }

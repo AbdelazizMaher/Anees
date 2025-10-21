@@ -1,10 +1,14 @@
 package com.muslim.anees.ui.screens.sebha
 
+import androidx.compose.runtime.asIntState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.muslim.anees.R
 import com.muslim.anees.data.model.Sebiha
 import com.muslim.anees.data.model.SebihaZekr
 import com.muslim.anees.data.repository.RepositoryImpl
+import com.muslim.anees.utils.Constants
 import com.muslim.anees.utils.sebha_helper.azkarList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,13 +29,16 @@ class SebihaViewModel @Inject constructor(private val repo: RepositoryImpl) : Vi
     private val _allSebhaZeker = MutableStateFlow(emptyList<SebihaZekr>())
     val allSebhaZeker = _allSebhaZeker.asStateFlow()
 
+    private val _sebhaImageId = mutableStateOf(getChachedSebhaImageId())
+    val sebhaImageId = _sebhaImageId.asIntState()
+
     init {
         cashInitialList()
         getSebiha()
     }
 
 
-    fun cashInitialList() {
+    private fun cashInitialList() {
         viewModelScope.launch {
             val list = repo.getAllZekrFromSebha().first()
             if (list.isEmpty()) {
@@ -43,6 +50,14 @@ class SebihaViewModel @Inject constructor(private val repo: RepositoryImpl) : Vi
     }
 
 
+    fun cashSebhaImageId(imageId: Int) {
+        repo.saveData(Constants.SEBHA_IMAGE_ID_KEY, imageId)
+        _sebhaImageId.value = imageId
+    }
+
+    fun getChachedSebhaImageId(): Int {
+        return repo.fetchData(Constants.SEBHA_IMAGE_ID_KEY, R.drawable.sebha)
+    }
 
     fun getAllAzkarFromDb() {
         viewModelScope.launch {
