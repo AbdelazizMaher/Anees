@@ -250,31 +250,55 @@ fun SebhaMainScreen(
                                 }
                             }
 
-                            Box(
-                                modifier = Modifier.size(52.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Image(
-                                    painter = painterResource(R.drawable.star),
-                                    contentDescription = null,
-                                    modifier = Modifier.fillMaxSize()
-                                )
-                                IconButton(
-                                    onClick = { showBottomSheet = true },
-                                    modifier = Modifier
-                                        .size(36.dp)
-                                        .background(Color.Transparent, shape = CircleShape)
+                            Column {
+                                Box(
+                                    modifier = Modifier.size(52.dp),
+                                    contentAlignment = Alignment.Center
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.Default.SwapVert,
+                                    Image(
+                                        painter = painterResource(R.drawable.star),
                                         contentDescription = null,
-                                        tint = Color.Black
+                                        modifier = Modifier.fillMaxSize()
                                     )
+                                    IconButton(
+                                        onClick = { showBottomSheet = true },
+                                        modifier = Modifier
+                                            .size(36.dp)
+                                            .background(Color.Transparent, shape = CircleShape)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.SwapVert,
+                                            contentDescription = null,
+                                            tint = Color.Black
+                                        )
+                                    }
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Box(
+                                    modifier = Modifier.size(52.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Image(
+                                        painter = painterResource(R.drawable.star),
+                                        contentDescription = null,
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                    IconButton(
+                                        onClick = { showBottomSheet = true },
+                                        modifier = Modifier
+                                            .size(36.dp)
+                                            .background(Color.Transparent, shape = CircleShape)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.SwapVert,
+                                            contentDescription = null,
+                                            tint = Color.Black
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
-
 
                     Spacer(modifier = Modifier.height(4.dp))
 
@@ -285,7 +309,7 @@ fun SebhaMainScreen(
                             .height(400.dp)
                     ) {
                         Image(
-                            painter = painterResource(R.drawable.sebha),
+                            painter = painterResource(R.drawable.sebha5),
                             contentDescription = null,
                             modifier = Modifier.size(300.dp)
                         )
@@ -363,7 +387,7 @@ fun SebhaMainScreen(
     }
     if (showBottomSheet) {
         AzkarButtomSheet(
-            viewModel =viewModel,
+            viewModel = viewModel,
             showAddZekrDialog = showAddZekrDialog,
             mainZekir,
             onClose = { showBottomSheet = false }) {
@@ -383,7 +407,7 @@ fun SebhaMainScreen(
     }
     if (showAddZekrDialog.value) {
         AddZekrDialog(
-            viewModel= viewModel,
+            viewModel = viewModel,
             showAddZekrDialog = showAddZekrDialog
         )
     }
