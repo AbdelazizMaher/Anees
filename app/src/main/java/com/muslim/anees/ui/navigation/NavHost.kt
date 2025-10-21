@@ -255,7 +255,7 @@ fun SetUpNavHost(
 
         composable<ScreenRoute.TafsirScreen> {
             TafsirScreen(navToDetails = {
-                navController.navigateUp()
+                //navController.navigateUp()
                 navController.navigate(ScreenRoute.TafsirDetailsScreen(it))
             }, navToHome = {
                 navController.navigateUp()
