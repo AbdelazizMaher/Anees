@@ -127,4 +127,7 @@ dependencies {
     // service location
     implementation("com.google.android.gms:play-services-location:21.3.0")
 
+    //glance for widget
+    implementation("androidx.glance:glance-appwidget:1.1.0")
+    implementation("androidx.glance:glance-material3:1.1.0")
 }
