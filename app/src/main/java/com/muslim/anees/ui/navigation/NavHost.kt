@@ -19,7 +19,6 @@ import com.muslim.anees.ui.navigation.ScreenRoute.FajrPlayerScreen
 import com.muslim.anees.ui.screens.azan.AzanScreen
 import com.muslim.anees.ui.screens.azkar.screens.AdhkarDetailsScreen
 import com.muslim.anees.ui.screens.azkar.screens.AdhkarScreen
-import com.muslim.anees.ui.screens.downloaded_audio.DownloadedAudioScreen
 import com.muslim.anees.ui.screens.eLMahfogat.ElMahfogatScreen
 import com.muslim.anees.ui.screens.hadith.HadithAuthorsScreen
 import com.muslim.anees.ui.screens.hadith.HadithScreen
@@ -120,18 +119,6 @@ fun SetUpNavHost(
                 navController.popBackStack()
                 navController.navigate(ScreenRoute.HomeScreen)
             }
-        }
-        composable<ScreenRoute.DownloadQuranScreen> {
-            DownloadedAudioScreen(onBackClick = {
-                navController.popBackStack()
-                navController.navigate(ScreenRoute.HomeScreen)
-            }, onSuraClicked = {
-                navController.navigate(
-                    ScreenRoute.QuranPlayerScreen(
-                        recitationModel = null, recitationName = null, index = it, isOnline = false
-                    )
-                )
-            })
         }
         composable<ScreenRoute.QiblaScreen> {
             QiblaScreen(

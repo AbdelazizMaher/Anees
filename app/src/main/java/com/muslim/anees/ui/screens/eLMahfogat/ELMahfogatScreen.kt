@@ -138,6 +138,7 @@ fun ElMahfogatScreen(
                             ) {
                                 itemsIndexed(audioList) { index, audio ->
                                     ElMahafogatDownloadedAudioCard(
+                                        viewModel = viewModel,
                                         surah = audio,
                                         index = index,
                                         onClick = navToReciter

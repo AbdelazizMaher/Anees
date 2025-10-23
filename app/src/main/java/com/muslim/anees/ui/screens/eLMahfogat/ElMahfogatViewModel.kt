@@ -1,6 +1,7 @@
 package com.muslim.anees.ui.screens.eLMahfogat
 
 import android.content.Context
+import android.os.Environment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.muslim.anees.data.model.HadithEntity
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,13 +45,23 @@ class ElMahfogatViewModel @Inject constructor(
         }
     }
 
+    fun deleteDownloadedSura(context: Context, fileName: String) {
+        val file = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC),
+            "Anees/$fileName.mp3"
+        )
+        file.delete()
+        loadAudio(context)
+    }
+
+
     fun loadAudio(context: Context) {
         viewModelScope.launch {
             _audioList.value = loadAllAudio(context)
         }
     }
 
-     fun loadSavedHadiths() {
+    fun loadSavedHadiths() {
         viewModelScope.launch {
             repository.getSavedHadithFlow()
                 .collect { hadithList ->

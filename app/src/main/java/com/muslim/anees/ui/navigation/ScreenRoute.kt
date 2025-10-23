@@ -68,7 +68,4 @@ sealed class ScreenRoute {
     @Serializable
     object ElMahfogatScreen : ScreenRoute()
 
-
-    @Serializable
-    object DownloadQuranScreen : ScreenRoute()
 }
