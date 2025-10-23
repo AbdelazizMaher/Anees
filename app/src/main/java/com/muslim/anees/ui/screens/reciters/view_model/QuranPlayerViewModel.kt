@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -174,6 +175,19 @@ class QuranPlayerViewModel @Inject constructor(private val context: Application)
 
         val dm = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         dm.enqueue(request)
+    }
+
+    fun isSuraDownloaded(): Boolean {
+        val index = _currentSuraIndex.value
+        val suraName = SuraIndexes[index].suraName
+        val reciter =  _playList.value[index].reciter
+        val description = _playList.value[index].description
+        val fileName = "$suraName - $reciter - $description.mp3"
+        val file = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC),
+            "Anees/$fileName"
+        )
+        return file.exists()
     }
 
     override fun onCleared() {

@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
@@ -39,6 +40,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -231,6 +233,12 @@ fun Mp3Playback(
     var sliderPosition by remember { mutableFloatStateOf(progress * duration) }
     val downloadingMap = remember { mutableStateMapOf<Int, Boolean>() }
     val isDownloading = downloadingMap[currentSuraIndex] ?: false
+    val isDownloaded = remember(currentSuraIndex) { mutableStateOf(false) }
+
+    LaunchedEffect(currentSuraIndex) {
+        isDownloaded.value = viewModel.isSuraDownloaded()
+    }
+
 
     LaunchedEffect(progress) {
         sliderPosition = progress * duration
@@ -310,16 +318,20 @@ fun Mp3Playback(
                 onClick = {
                     viewModel.downloadCurrentSura()
                     downloadingMap[currentSuraIndex] = true
+                    isDownloaded.value = true
                 },
-                enabled = !isDownloading
+                enabled = !isDownloading && !isDownloaded.value
+
             ) {
                 Icon(
-                    Icons.Default.Download,
-                    contentDescription = "تحميل",
-                    modifier = Modifier.size(32.dp)
+                    imageVector = if (isDownloaded.value) Icons.Default.Favorite else Icons.Default.Download,
+                    contentDescription = if (isDownloaded.value) "تم التحميل" else "تحميل",
+                    modifier = Modifier
+                        .size(32.dp)
                         .alpha(if (isDownloading) 0.5f else 1f),
                     tint = Color(0xFF4CAF50)
                 )
+
             }
         }
     }
