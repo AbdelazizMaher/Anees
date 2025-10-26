@@ -14,7 +14,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.composeVersionanees"
+        applicationId = "com.muslim.anees"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
