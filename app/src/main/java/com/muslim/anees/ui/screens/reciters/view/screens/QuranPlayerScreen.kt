@@ -137,7 +137,7 @@ fun QuranPlayerScreen(
                     onBackClick()
                 },
                 modifier = Modifier
-                    .padding(vertical = 24.dp)
+                    .padding(vertical = 48.dp)
                     .size(48.dp),
             ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")

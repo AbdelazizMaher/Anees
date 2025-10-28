@@ -35,6 +35,7 @@ import com.muslim.anees.utils.hadith_helper.offline_hadith.OfflineHadithHelper
 
 @Composable
 fun HadithScreen(
+    title: String,
     author: AuthorEdition,
     id: String,
     onBackClick: () -> Unit,
@@ -59,9 +60,9 @@ fun HadithScreen(
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
 
                 ScreenTitle(
-                    title = author.displayNameAr,
+                    title = author.displayNameAr+" / "+title,
                     onBackClick = onBackClick,
-                    size = 24
+                    size = 20
                 )
             }
 

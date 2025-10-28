@@ -162,7 +162,8 @@ fun SetUpNavHost(
                 it.arguments?.getString("author"), AuthorEdition::class.java
             )
             val id = it.arguments?.getString("number") ?: ""
-            HadithScreen(author, id, {
+            val title = it.arguments?.getString("title") ?: ""
+            HadithScreen(title,author, id, {
                 navController.navigateUp()
             })
         }
@@ -177,8 +178,8 @@ fun SetUpNavHost(
             val author = Gson().fromJson(
                 it.arguments?.getString("author"), AuthorEdition::class.java
             )
-            HadithSectionsScreen(author, { auth, id ->
-                navController.navigate(ScreenRoute.HadithScreen(auth, id))
+            HadithSectionsScreen(author, { auth, id, title ->
+                navController.navigate(ScreenRoute.HadithScreen(auth, id,title))
             }, onBackClick = {
                 navController.navigateUp()
             })

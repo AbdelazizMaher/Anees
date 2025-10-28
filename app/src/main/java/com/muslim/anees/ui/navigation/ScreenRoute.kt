@@ -20,7 +20,7 @@ sealed class ScreenRoute {
     @Serializable
     data class AzkarDetailsScreen(val category: String) : ScreenRoute()
     @Serializable
-    data class HadithScreen(val author: String, val number: String) : ScreenRoute()
+    data class HadithScreen(val author: String, val number: String,val title: String) : ScreenRoute()
     @Serializable
     data object HadithAuthorsScreen : ScreenRoute()
     @Serializable
