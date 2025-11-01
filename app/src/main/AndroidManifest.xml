@@ -48,11 +48,6 @@
             />
         <receiver android:name=".receivers.AzanAlarmReceiver" android:exported="true" />
         <service android:name=".services.RadioService" android:foregroundServiceType="mediaPlayback"/>
-
-        <receiver
-            android:name=".receivers.AzanAlarmReceiver"
-            android:exported="true" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true"
