@@ -3,6 +3,7 @@ package com.muslim.anees.utils
 
 object Constants {
     const val SHARED_PREFERENCE_NAME = "SHARED_PREFERENCE_NAME"
+    const val DATASTORE_NAME = "DATASTORE_NAME"
     const val ROOM_DATABASE = "roomdb"
     const val AZKAR_FILE_NAME = "adhkar.json"
     const val NAMES_OF_ALLAH = "names.json"

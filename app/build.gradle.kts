@@ -128,4 +128,6 @@ dependencies {
     // service location
     implementation("com.google.android.gms:play-services-location:21.3.0")
 
+    // data store
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
 }
