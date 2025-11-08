@@ -1,4 +1,4 @@
-package com.muslim.anees.data.local
+package com.muslim.anees.data.local.sources
 
 import com.abdok.atmosphere.data.local.sharedPreference.ISharedPreferences
 import com.muslim.anees.data.local.database.dao.AneesDao

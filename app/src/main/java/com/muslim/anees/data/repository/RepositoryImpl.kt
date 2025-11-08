@@ -1,6 +1,6 @@
 package com.muslim.anees.data.repository
 
-import com.muslim.anees.data.local.LocalDataSource
+import com.muslim.anees.data.local.sources.LocalDataSource
 import com.muslim.anees.data.model.AzkarEntity
 import com.muslim.anees.data.model.EditionResponse
 import com.muslim.anees.data.model.HadithEntity
