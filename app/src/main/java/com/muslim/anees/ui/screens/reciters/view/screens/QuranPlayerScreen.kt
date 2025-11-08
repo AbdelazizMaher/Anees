@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,6 +58,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -65,6 +67,7 @@ import com.muslim.anees.R
 import com.muslim.anees.data.model.RecitationModel
 import com.muslim.anees.enums.SuraTypeEnum
 import com.muslim.anees.services.RadioService
+import com.muslim.anees.ui.screens.radio.view.HandleAudioCloseAction
 import com.muslim.anees.ui.screens.radio.view.components.ScreenBackground
 import com.muslim.anees.ui.screens.reciters.view_model.QuranPlayerViewModel
 import com.muslim.anees.utils.SharedModel
@@ -73,63 +76,39 @@ import com.muslim.anees.utils.media_helper.RadioPlayer
 
 @Composable
 fun QuranPlayerScreen(
+    viewModel: QuranPlayerViewModel = hiltViewModel(),
     recitationModel: RecitationModel?,
     recitationName: String?,
     initialSuraIndex: Int = 0,
     isOnline: Boolean = true,
     onBackClick: () -> Unit = {}
 ) {
-    val viewModel: QuranPlayerViewModel = viewModel()
     val currentTrack by viewModel.currentTrack.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
+    HandleAudioCloseAction(
+        context = context,
+        lifecycleOwner = lifecycleOwner,
+        onBackClick = onBackClick,
+        onAppClose =  { (context as? Activity)?.finish() },
+        onDispose = { viewModel.saveCurrentProgress() }
+    )
+
     LaunchedEffect(Unit) {
         if (isOnline) {
             viewModel.setOnlinePlaylist(recitationModel!!, recitationName!!)
-            viewModel.playSura(initialSuraIndex)
         } else {
             viewModel.setOfflinePlaylist()
-            viewModel.playSura(initialSuraIndex)
         }
-    }
-
-
-    DisposableEffect(lifecycleOwner) {
-        val receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                if (SharedModel.isAppActive) {
-                    onBackClick()
-                } else {
-                    (context as Activity).finishAffinity()
-                }
-            }
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(
-                receiver,
-                IntentFilter(RadioService.ACTION_CLOSE),
-                Context.RECEIVER_NOT_EXPORTED
-            )
-        } else {
-            ContextCompat.registerReceiver(
-                context,
-                receiver,
-                IntentFilter(RadioService.ACTION_CLOSE),
-                ContextCompat.RECEIVER_NOT_EXPORTED
-            )
-        }
-
-        onDispose {
-            context.unregisterReceiver(receiver)
-            val stopIntent = Intent(context, RadioService::class.java)
-            context.stopService(stopIntent)
-        }
+        viewModel.setLastAudioPlayed()
+        viewModel.playSura(initialSuraIndex)
     }
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-        Box(modifier = Modifier
-            .fillMaxSize()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
         ) {
             ScreenBackground()
             IconButton(
@@ -224,7 +203,7 @@ fun Mp3Playback(
     viewModel: QuranPlayerViewModel,
     isOnline: Boolean
 ) {
-   val progress by viewModel.progress.collectAsStateWithLifecycle()
+    val progress by viewModel.progress.collectAsStateWithLifecycle()
     val currentSuraIndex by viewModel.currentSuraIndex.collectAsStateWithLifecycle()
     val isPlaying by viewModel.isPlaying.collectAsStateWithLifecycle()
     val playlist by viewModel.playList.collectAsStateWithLifecycle()
@@ -255,7 +234,6 @@ fun Mp3Playback(
         },
         onValueChangeFinished = {
             viewModel.seekTo(sliderPosition.toLong())
-
         },
         valueRange = 0f..maxOf(1f, duration),
         modifier = Modifier.fillMaxWidth(),
