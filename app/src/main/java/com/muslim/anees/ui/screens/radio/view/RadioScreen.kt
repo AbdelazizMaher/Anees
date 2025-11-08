@@ -123,7 +123,8 @@ fun HandleAudioCloseAction(
     context: Context,
     lifecycleOwner: LifecycleOwner,
     onBackClick: () -> Unit = {},
-    onAppClose: () -> Unit = {}
+    onAppClose: () -> Unit = {},
+    onDispose: () -> Unit = {}
 ) {
     DisposableEffect(lifecycleOwner) {
         val receiver = object : BroadcastReceiver() {
@@ -151,6 +152,7 @@ fun HandleAudioCloseAction(
         }
 
         onDispose {
+            onDispose()
             context.unregisterReceiver(receiver)
             val stopIntent = Intent(context, RadioService::class.java)
             context.stopService(stopIntent)
