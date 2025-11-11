@@ -52,7 +52,7 @@ fun ElMahfogatScreen(
     val azkarCategories by viewModel.azkarCategories.collectAsStateWithLifecycle()
     val hadithContent by viewModel.savedHadith.collectAsStateWithLifecycle()
 
-    val tabs = listOf("القراءات","الأذكار", "الأحاديث")
+    val tabs = listOf("القرآن","الأذكار", "الأحاديث")
     val pagerState = rememberPagerState(initialPage = 0) { tabs.size }
     val coroutineScope = rememberCoroutineScope()
 
@@ -128,7 +128,7 @@ fun ElMahfogatScreen(
                     0 -> {
                         val audioList = viewModel.audioList.collectAsStateWithLifecycle().value
                         if (audioList.isEmpty()) {
-                            EmptyPlaceholder("لا توجد قراءات محفوظة")
+                            EmptyPlaceholder("لا توجد سور محفوظة")
                         } else {
                             LazyColumn(
                                 modifier = Modifier

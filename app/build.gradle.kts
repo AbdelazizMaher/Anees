@@ -17,15 +17,16 @@ android {
         applicationId = "com.muslim.anees"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -77,17 +78,17 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.51")
     kapt("com.google.dagger:hilt-compiler:2.51")
     //pdf
-    implementation("com.github.barteksc:android-pdf-viewer:3.2.0-beta.1")
+    implementation("io.github.oothp:android-pdf-viewer:3.2.0-beta05")
     //icons
     implementation ("androidx.compose.material:material-icons-extended:1.4.0")
     //Hilt for compose-Navigation
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     //room
-    val room_version = "2.6.1"
-    implementation("androidx.room:room-runtime:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
-    ksp("androidx.room:room-compiler:$room_version")
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
 
     // retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
@@ -95,8 +96,8 @@ dependencies {
 
 
     //navigation
-    val nav_version = "2.8.8"
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+    val navVersion = "2.8.8"
+    implementation("androidx.navigation:navigation-compose:$navVersion")
     implementation ("com.google.code.gson:gson:2.10.1")
 
     //workManager
@@ -106,8 +107,8 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose-android:2.8.7")
 
-    val compose_version = "1.0.0"
-    implementation ("androidx.compose.runtime:runtime-livedata:$compose_version")
+    val composeVersion = "1.0.0"
+    implementation ("androidx.compose.runtime:runtime-livedata:$composeVersion")
 
     implementation ("com.batoulapps.adhan:adhan:1.2.1")
 

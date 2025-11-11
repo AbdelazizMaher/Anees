@@ -56,7 +56,7 @@ import com.muslim.anees.utils.extensions.isInternetAvailable
 import com.muslim.anees.utils.hadith_helper.getSections
 
 @Composable
-fun HadithSectionsScreen(author: AuthorEdition, navToHadithScreen: (String, String) -> Unit, onBackClick: ()-> Unit) {
+fun HadithSectionsScreen(author: AuthorEdition, navToHadithScreen: (String, String,String) -> Unit, onBackClick: ()-> Unit) {
     val ctx = LocalContext.current
     val isOnline = ctx.isInternetAvailable()
     val sectionsMap = getSections(author.apiKey,isOnline)
@@ -98,7 +98,7 @@ fun HadithSectionsScreen(author: AuthorEdition, navToHadithScreen: (String, Stri
                         sectionNumber = number,
                         sectionTitle = title
                     ) { selectedNumber ->
-                        navToHadithScreen(Gson().toJson(author), selectedNumber)
+                        navToHadithScreen(Gson().toJson(author), selectedNumber,title)
                     }
                 }
                 item(1) {
