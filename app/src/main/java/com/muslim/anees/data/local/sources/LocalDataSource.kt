@@ -1,4 +1,4 @@
-package com.muslim.anees.data.local
+package com.muslim.anees.data.local.sources
 
 import com.muslim.anees.data.model.AzkarEntity
 import com.muslim.anees.data.model.HadithEntity

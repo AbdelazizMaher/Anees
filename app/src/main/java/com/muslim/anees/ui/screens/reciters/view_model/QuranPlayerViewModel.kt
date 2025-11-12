@@ -8,11 +8,13 @@ import android.os.Build
 import android.os.Environment
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.muslim.anees.data.model.RecitationModel
 import com.muslim.anees.data.model.audio.AudioTrack
+import com.muslim.anees.data.model.audio.LastPlayedAudio
 import com.muslim.anees.data.model.audio.toAudioTrack
+import com.muslim.anees.data.repository.audio.AudioRepository
 import com.muslim.anees.receivers.RadioBroadcastReceiver
 import com.muslim.anees.services.RadioService
 import com.muslim.anees.utils.downloaded_audio.loadAllAudio
@@ -21,6 +23,8 @@ import com.muslim.anees.utils.media_helper.RadioServiceManager
 import com.muslim.anees.utils.pdf_helper.SuraIndexes
 import com.muslim.anees.utils.sura_mp3_helper.suraUrls
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,11 +37,14 @@ import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
-class QuranPlayerViewModel @Inject constructor(private val context: Application) :
-    AndroidViewModel(context) {
-
+class QuranPlayerViewModel @Inject constructor(
+    private val context: Application,
+    private val audioRepository: AudioRepository
+) : ViewModel() {
     private val _playList = MutableStateFlow<List<AudioTrack>>(emptyList())
     val playList = _playList.asStateFlow()
+
+    private var lastPlayedAudio: LastPlayedAudio? = null
 
     private val _currentSuraIndex = MutableStateFlow(0)
     val currentSuraIndex = _currentSuraIndex.asStateFlow()
@@ -52,10 +59,10 @@ class QuranPlayerViewModel @Inject constructor(private val context: Application)
 
     private var broadcastReceiver: RadioBroadcastReceiver? = null
 
-
-    val currentTrack: StateFlow<AudioTrack?> = combine(_playList, _currentSuraIndex) { playList, index ->
-        playList.getOrNull(index)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
+    val currentTrack: StateFlow<AudioTrack?> =
+        combine(_playList, _currentSuraIndex) { playList, index ->
+            playList.getOrNull(index)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 
     init {
         setupBroadcastReceiver()
@@ -77,6 +84,7 @@ class QuranPlayerViewModel @Inject constructor(private val context: Application)
         _playList.value = suras
         _currentSuraIndex.value = 0
     }
+
     fun setOfflinePlaylist() {
         val suras = loadAllAudio(context).map {
             it.toAudioTrack(loadAllAudio(context).indexOf(it))
@@ -86,7 +94,7 @@ class QuranPlayerViewModel @Inject constructor(private val context: Application)
     }
 
     fun playSura(index: Int) {
-        if(index < 0 || index > _playList.value.lastIndex) return
+        if (index < 0 || index > _playList.value.lastIndex) return
         _currentSuraIndex.value = index
         val sura = _playList.value[index]
         RadioServiceManager.startRadioService(context, sura, false)
@@ -110,7 +118,10 @@ class QuranPlayerViewModel @Inject constructor(private val context: Application)
                 val duration = RadioPlayer.getDuration()
                 val position = RadioPlayer.getCurrentPosition()
                 if (duration > 0) {
-                    _progress.value = position / duration.toFloat()
+                    _progress.value = lastPlayedAudio?.progress?.also {
+                        lastPlayedAudio = null
+                        RadioPlayer.seekTo((it * duration).toLong())
+                    } ?: (position / duration.toFloat())
                     if (position >= duration - 500 && _isPlaying.value) {
                         if (_currentSuraIndex.value < _playList.value.lastIndex) {
                             onNext()
@@ -155,13 +166,19 @@ class QuranPlayerViewModel @Inject constructor(private val context: Application)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(broadcastReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
         } else {
-            ContextCompat.registerReceiver(context, broadcastReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
+            ContextCompat.registerReceiver(
+                context,
+                broadcastReceiver,
+                filter,
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
         }
     }
+
     fun downloadCurrentSura() {
         val index = _currentSuraIndex.value
         val suraName = SuraIndexes[index].suraName
-        val suraUrl =_playList.value[index].uri
+        val suraUrl = _playList.value[index].uri
         val fileName =
             "$suraName - ${_playList.value[index].reciter} - ${_playList.value[index].description}.mp3"
         val request = DownloadManager.Request(suraUrl.toUri())
@@ -180,7 +197,7 @@ class QuranPlayerViewModel @Inject constructor(private val context: Application)
     fun isSuraDownloaded(): Boolean {
         val index = _currentSuraIndex.value
         val suraName = SuraIndexes[index].suraName
-        val reciter =  _playList.value[index].reciter
+        val reciter = _playList.value[index].reciter
         val description = _playList.value[index].description
         val fileName = "$suraName - $reciter - $description.mp3"
         val file = File(
@@ -203,4 +220,28 @@ class QuranPlayerViewModel @Inject constructor(private val context: Application)
         RadioPlayer.seekTo(milliseconds)
     }
 
+    fun setLastAudioPlayed() {
+        viewModelScope.launch {
+            audioRepository.getLastPlayedAudio().collect { audio ->
+                audio?.let {
+                    if (it.reciter == currentTrack.value?.reciter && it.title == currentTrack.value?.title) {
+                        lastPlayedAudio = it
+                    }
+                }
+            }
+        }
+    }
+
+    fun saveCurrentProgress() {
+        CoroutineScope(Dispatchers.IO).launch {
+            audioRepository.saveLastPlayedAudio(
+                LastPlayedAudio(
+                    reciter = _playList.value[_currentSuraIndex.value].reciter,
+                    title = _playList.value[_currentSuraIndex.value].title,
+                    reciterImage = _playList.value[_currentSuraIndex.value].reciterImage,
+                    progress = _progress.value
+                )
+            )
+        }
+    }
 }

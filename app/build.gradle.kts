@@ -128,6 +128,8 @@ dependencies {
     // service location
     implementation("com.google.android.gms:play-services-location:21.3.0")
 
+    // data store
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
     //glance for widget
     implementation("androidx.glance:glance-appwidget:1.0.0")
     implementation("androidx.glance:glance-material3:1.0.0")
