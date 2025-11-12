@@ -75,39 +75,38 @@ fun Context.setAlarm(
     val reminderNotificationIntent = Intent(this, AzanAlarmReceiver::class.java)
     val prayCode = mapPrayEnumToNumber(prayEnum.value)
     reminderNotificationIntent.putExtra("soundType", prayCode)
+    intent.action = "ACTION_ALARM_${prayEnum.value}"
+    reminderNotificationIntent.action = "ACTION_REMINDER_${prayEnum.value}"
 
     val pendingIntent = PendingIntent.getBroadcast(
         this,
         requestCode,
         intent,
-        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
     val reminderNotificationPendingIntent = PendingIntent.getBroadcast(
         this,
         requestCode+5,
         reminderNotificationIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
     val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         if (!alarmManager.canScheduleExactAlarms()) {
-            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+            intent.data = Uri.parse("package:$packageName")
             startActivity(intent)
         }
     }
-    alarmManager.setExactAndAllowWhileIdle(
-        AlarmManager.RTC_WAKEUP,
-        triggerTimeMillis,
-        pendingIntent
-    )
 
-    alarmManager.setExactAndAllowWhileIdle(
-        AlarmManager.RTC_WAKEUP,
-        triggerTimeMillis - (5 * 60 * 1000),
-        reminderNotificationPendingIntent
-    )
+    val alarmInfo = AlarmManager.AlarmClockInfo(triggerTimeMillis, pendingIntent)
+    alarmManager.setAlarmClock(alarmInfo, pendingIntent)
+
+    val alarmNotificationInfo = AlarmManager.AlarmClockInfo(triggerTimeMillis - (5 * 60 * 1000), reminderNotificationPendingIntent)
+    alarmManager.setAlarmClock(alarmNotificationInfo, reminderNotificationPendingIntent)
+
 }
 fun Context.isVolumeZero(): Boolean {
     val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
