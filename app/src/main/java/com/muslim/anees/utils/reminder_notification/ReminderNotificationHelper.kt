@@ -52,7 +52,7 @@ fun createReminderNotification(soundType: Int, context: Context){
             azan,
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            setSound(soundUri, null) // set custom sound here
+            setSound(soundUri, null)
         }
 
         notificationManager.createNotificationChannel(channel)
