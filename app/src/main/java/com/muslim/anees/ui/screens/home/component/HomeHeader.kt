@@ -54,7 +54,11 @@ import com.muslim.anees.utils.extensions.isLocationEnabled
 import com.muslim.anees.utils.extensions.toArabicTime
 import com.muslim.anees.utils.location.LocationProvider
 import com.muslim.anees.utils.prayer_helper.PrayerTimesHelper
+import com.muslim.anees.widgets.WidgetUpdater
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 
@@ -217,6 +221,10 @@ fun syncLocation(
     LocationProvider(context).fetchLatLong { location ->
         coordinates.value = Coordinates(location.latitude, location.longitude)
         isSyncing.value = false
+    }
+
+    CoroutineScope(Dispatchers.IO).launch {
+        WidgetUpdater.refreshWidgets(context)
     }
 }
 

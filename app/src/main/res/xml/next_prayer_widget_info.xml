@@ -1,10 +1,14 @@
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:minWidth="300dp"
-    android:minHeight="150dp"
-
-    android:resizeMode="none"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:minWidth="200dp"
+    android:minHeight="100dp"
+    android:maxResizeHeight="200dp"
+    android:maxResizeWidth="300dp"
+    android:updatePeriodMillis="10800000"
+    android:resizeMode="vertical|horizontal"
     android:widgetCategory="home_screen"
     android:previewImage="@drawable/prayer_widget_preview"
     android:description="@string/widget_description"
-    android:initialLayout="@layout/widget_preview_placeholder" />
+    android:initialLayout="@layout/widget_preview_placeholder"
+    tools:targetApi="31" />

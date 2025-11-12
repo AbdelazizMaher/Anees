@@ -15,7 +15,10 @@ import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import androidx.glance.appwidget.appWidgetBackground
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
@@ -59,7 +62,7 @@ object NextPrayerWidget : GlanceAppWidget() {
                 .fillMaxSize()
                 .background(ImageProvider(R.drawable.widget_brown_bg))
                 .clickable(onClick = openAppAction)
-                .padding(8.dp)
+                .padding(8.dp).appWidgetBackground()
         ) {
             // Background mosque overlay
             Image(
@@ -99,7 +102,7 @@ object NextPrayerWidget : GlanceAppWidget() {
                                 style = TextStyle(
                                     color = ColorProvider(Color.White),
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 22.sp
+                                    fontSize =18.sp
                                 )
                             )
                         }
@@ -121,19 +124,20 @@ object NextPrayerWidget : GlanceAppWidget() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = context.getCityAndCountryInArabic(),
+                            text = context.getCityAndCountryInArabic().split("،").firstOrNull()?.trim() ?: context.getCityAndCountryInArabic(),
                             style = TextStyle(
                                 color = ColorProvider(Color.White.copy(alpha = 0.9f)),
-                                fontSize = 20.sp,
+                                fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
-                            )
+                            ), maxLines = 1
+
                         )
                         Spacer(modifier = GlanceModifier.height(2.dp))
                         Text(
                             text = DateHelper.getTodayHijriDate(),
                             style = TextStyle(
                                 color = ColorProvider(Color.White.copy(alpha = 0.9f)),
-                                fontSize = 18.sp,
+                                fontSize = 14.sp,
                                 fontWeight = FontWeight.Medium
                             )
                         )
@@ -152,9 +156,10 @@ object NextPrayerWidget : GlanceAppWidget() {
         val prayers = PrayerTimesHelper.getAllPrayers().reversed()
 
         Row(
-            modifier = GlanceModifier.fillMaxWidth(),
+            modifier = GlanceModifier.fillMaxWidth().background(Color.LightGray.copy(alpha = 0.3f)).cornerRadius(25.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+
         ) {
             prayers.forEachIndexed { index, (prayerEnum, time, isHighlighted) ->
                 val prayerName =
@@ -181,7 +186,7 @@ object NextPrayerWidget : GlanceAppWidget() {
                             color = ColorProvider(
                                 if (isHighlighted) Color.White else Color.White.copy(alpha = 0.8f)
                             ),
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontWeight = if (isHighlighted) FontWeight.Bold else FontWeight.Medium
                         ),
                         maxLines = 1
@@ -211,4 +216,9 @@ object NextPrayerWidget : GlanceAppWidget() {
 
 class NextPrayerWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = NextPrayerWidget
+}
+object WidgetUpdater {
+    suspend fun refreshWidgets(context: Context) {
+        NextPrayerWidget.updateAll(context)
+    }
 }

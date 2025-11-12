@@ -9,6 +9,10 @@ import com.muslim.anees.enums.PrayEnum
 import com.muslim.anees.ui.screens.azan.AzanOverlayActivity
 import com.muslim.anees.utils.Constants
 import com.muslim.anees.utils.reminder_notification.createReminderNotification
+import com.muslim.anees.widgets.WidgetUpdater
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AzanAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
@@ -32,7 +36,9 @@ class AzanAlarmReceiver : BroadcastReceiver() {
             if (state) {
                 context.startActivity(overlayIntent)
             }
-
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            WidgetUpdater.refreshWidgets(context)
         }
     }
 }
