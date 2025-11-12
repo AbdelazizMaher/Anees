@@ -3,6 +3,7 @@ package com.muslim.anees.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.PowerManager
 import android.util.Log
 import com.muslim.anees.data.local.sharedpreference.SharedPreferencesImpl
 import com.muslim.anees.enums.PrayEnum
@@ -12,6 +13,13 @@ import com.muslim.anees.utils.reminder_notification.createReminderNotification
 
 class AzanAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
+
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        val wakeLock = powerManager.newWakeLock(
+            PowerManager.PARTIAL_WAKE_LOCK,
+            "AzanApp::AzanWakelock"
+        )
+        wakeLock.acquire(10 * 60 * 1000L )
 
         if (intent?.hasExtra("soundType") == true){
             val soundType = intent.getIntExtra("soundType", 0)
@@ -34,5 +42,6 @@ class AzanAlarmReceiver : BroadcastReceiver() {
             }
 
         }
+        wakeLock.release()
     }
 }
