@@ -2,4 +2,5 @@
 <resources>
     <string name="anees_quran">قرآن أنيس</string>
     <string name="anees_radio">راديو أنيس</string>
+    <string name="widget_description">أداة مواقيت الصلاة القادمة</string>
 </resources>
