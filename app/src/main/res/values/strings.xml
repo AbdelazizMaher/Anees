@@ -4,4 +4,5 @@
     <string name="title_activity_azan_overlay">AzanOverlayActivity</string>
     <string name="anees_quran">Anees Quran</string>
     <string name="anees_radio">راديو أنيس</string>
+    <string name="widget_description">Next Prayer Time Widget</string>
 </resources>
